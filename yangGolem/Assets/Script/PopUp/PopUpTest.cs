@@ -156,6 +156,9 @@ public class PopUpTest : MonoBehaviour
 
                 InGameManager.instance.selectedObjectToPlace.transform.eulerAngles = Vector3.zero;
                 InGameManager.instance.selectedObjectToPlace.name = selectObject.name;
+                InGameManager.instance.selectedObjectToPlace.layer = LayerMask.NameToLayer("SelectedObj");
+                InGameManager.instance.selectedObjectToPlace.transform.SetChildLayer(LayerMask.NameToLayer("SelectedObj"));
+
                 CheckLocationByClick.instance.isConstruction = true;
 
                 Destroy(selectObject);

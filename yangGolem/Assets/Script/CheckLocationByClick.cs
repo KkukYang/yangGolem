@@ -74,6 +74,7 @@ public class CheckLocationByClick : MonoBehaviour {
         grid.transform.eulerAngles = Vector3.zero;
         bounds = grid.GetComponent<MeshCollider>().bounds;
         grid.transform.eulerAngles = tempVec;
+        grid.GetComponent<MeshRenderer>().enabled = false;
 
     }
 
@@ -94,10 +95,12 @@ public class CheckLocationByClick : MonoBehaviour {
             }
 
             preMousePos = Input.mousePosition;
+            grid.GetComponent<MeshRenderer>().enabled = true;
+
         }
 
         //놓을곳 지정.
-        if(isConstruction && Input.GetMouseButtonUp(0)
+        if (isConstruction && Input.GetMouseButtonUp(0)
             && PopUpManager.instance.listPopUp.Find(popup => popup.name == "PopUpTest") == null)
         {
             bool result = true;
@@ -114,12 +117,16 @@ public class CheckLocationByClick : MonoBehaviour {
             if(result)
             {
                 InGameManager.instance.selectedObjectToPlace.transform.parent = floorLand.transform;
+                InGameManager.instance.selectedObjectToPlace.transform.GetChild(0).GetComponent<BoxCollider>().enabled = true;
+                InGameManager.instance.selectedObjectToPlace.layer = LayerMask.NameToLayer("PopUp3D");
+                InGameManager.instance.selectedObjectToPlace.transform.SetChildLayer(LayerMask.NameToLayer("PopUp3D"));
                 foreach (GameObject obj in listSelectTile)
                 {
                     obj.SetActive(false);
                 }
 
                 isConstruction = false;
+                grid.GetComponent<MeshRenderer>().enabled = false;
             }
         }
 

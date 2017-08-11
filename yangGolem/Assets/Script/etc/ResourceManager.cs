@@ -267,4 +267,12 @@ public class ResourceManager : MonoBehaviour {
 
     }
 
+    //public void SetLayerChange(GameObject _obj, string _layerName)
+    //{
+    //    foreach(Transform tm in _obj.transform)
+    //    {
+    //        tm.lay
+    //    }
+    //}
+
 }
