@@ -15,7 +15,7 @@ public class GameInfoManager : MonoBehaviour
         }
     }
 
-    public UserDataInfo userDataInfo;
+    //public UserDataInfo userDataInfo;
 
     private void Awake()
     {
@@ -26,8 +26,8 @@ public class GameInfoManager : MonoBehaviour
         //string jsonText = JsonWriter.Serialize(userDataInfo);
         //PlayerPrefs.SetString("jsonText", jsonText);
 
-        string jsonText = PlayerPrefs.GetString("jsonText");
-        userDataInfo = JsonReader.Deserialize<UserDataInfo>(jsonText);
+        //string jsonText = PlayerPrefs.GetString("jsonText");
+        //userDataInfo = JsonReader.Deserialize<UserDataInfo>(jsonText);
 
         //Debug.Log("");
     }
@@ -56,25 +56,25 @@ public class GameInfoManager : MonoBehaviour
 }
 
 
-public class UserDataInfo
-{
-    public int user_no;
-    public Dictionary<string, string> dicData;
-    public List<string> listData;
+//public class UserDataInfo
+//{
+//    public int user_no;
+//    public Dictionary<string, string> dicData;
+//    public List<string> listData;
 
-    public UserDataInfo()
-    {
-        user_no = 1000000001;
-        dicData = new Dictionary<string, string>();
-        listData = new List<string>();
+//    public UserDataInfo()
+//    {
+//        user_no = 1000000001;
+//        dicData = new Dictionary<string, string>();
+//        listData = new List<string>();
 
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                dicData.Add(i.ToString(), "a" + (i * 123).ToString());
-                listData.Add("a" + (i * 1123).ToString());
-            }
-        }
-    }
-}
+//        {
+//            for (int i = 0; i < 10; i++)
+//            {
+//                dicData.Add(i.ToString(), "a" + (i * 123).ToString());
+//                listData.Add("a" + (i * 1123).ToString());
+//            }
+//        }
+//    }
+//}
 

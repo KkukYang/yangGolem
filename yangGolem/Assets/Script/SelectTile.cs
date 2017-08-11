@@ -9,6 +9,9 @@ public class SelectTile : MonoBehaviour
     public bool isEnable = false;
     public GameObject rootSelectTile;
 
+    public Material matGreen;
+    public Material matRed;
+
     private void OnEnable()
     {
         
@@ -33,11 +36,15 @@ public class SelectTile : MonoBehaviour
 
         if(isEnable)
         {
-            this.GetComponent<MeshRenderer>().material.color = Color.green;
+            //this.GetComponent<MeshRenderer>().material.color = Color.green;
+            this.GetComponent<MeshRenderer>().material = matGreen;
+
         }
         else
         {
-            this.GetComponent<MeshRenderer>().material.color = Color.red;
+            //this.GetComponent<MeshRenderer>().material.color = Color.red;
+            this.GetComponent<MeshRenderer>().material = matRed;
+
         }
     }
 }

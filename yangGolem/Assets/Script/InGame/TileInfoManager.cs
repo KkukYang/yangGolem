@@ -50,25 +50,36 @@ public class TileInfoManager : MonoBehaviour
 
     void SetFloorTile()
     {
-        for(int x = 0; x < CheckLocationByClick.instance.row; x++)
+        for(int y = 0; y < CheckLocationByClick.instance.col; y++)
         {
-            for(int y = 0; y < CheckLocationByClick.instance.col; y++)
+            for(int x = 0; x < CheckLocationByClick.instance.row; x++)
             {
-                switch(arrFloorTile[x,y])
+                switch(arrFloorTile[y,x])
                 {
                     case (int)EnumFloorTile.Normal:
                         {
                             GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumFloorTile.Normal.ToString()]) as GameObject;
                             //좌표에 따른 위치 지정.
-                            _tileObj.transform.parent = floorTileGroup.transform;
-                            _tileObj.transform.localPosition = new Vector3(x * 0.5f - (0.5f * 0.5f) * (CheckLocationByClick.instance.row - 1)
-                                , 0.0f
-                                , y * -0.5f + (0.5f * 0.5f) * (CheckLocationByClick.instance.col - 1));
-                            _tileObj.transform.eulerAngles = new Vector3(90.0f, 45.0f, 0.0f);
-                            _tileObj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                            _tileObj.SetActive(true);
+                            SetTileOnLand(_tileObj, floorTileGroup, x, y);
                         }
                         break;
+
+                    case (int)EnumFloorTile.Grass:
+                        {
+                            GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumFloorTile.Grass.ToString()]) as GameObject;
+                            //좌표에 따른 위치 지정.
+                            SetTileOnLand(_tileObj, floorTileGroup, x, y);
+                        }
+                        break;
+
+                    case (int)EnumFloorTile.Soil:
+                        {
+                            GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumFloorTile.Soil.ToString()]) as GameObject;
+                            //좌표에 따른 위치 지정.
+                            SetTileOnLand(_tileObj, floorTileGroup, x, y);
+                        }
+                        break;
+
 
                     default:
                         {
@@ -78,6 +89,17 @@ public class TileInfoManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    void SetTileOnLand(GameObject _obj, GameObject _group, int _x, int _y)
+    {
+        _obj.transform.parent = _group.transform;
+        _obj.transform.localPosition = new Vector3(_x * 0.5f - (0.5f * 0.5f) * (CheckLocationByClick.instance.row - 1)
+            , 0.0f
+            , _y * -0.5f + (0.5f * 0.5f) * (CheckLocationByClick.instance.col - 1));
+        _obj.transform.eulerAngles = new Vector3(90.0f, 45.0f, 0.0f);
+        _obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        _obj.SetActive(true);
     }
 
     void SetGeography()
@@ -112,13 +134,13 @@ public class TileInfoManager : MonoBehaviour
         string[] lines = data.text.Split(new char[] { '\r', '\n' }, option);
         char[] spliter = new char[1] { ',' };
 
-        for (int i = 1; i < lines.Length; i++)
+        for (int y = 0; y < lines.Length; y++)
         {
-            string[] temp = lines[i].Split(spliter, option);
+            string[] temp = lines[y].Split(spliter, option);
 
-            for (int j = 0; j < temp.Length; j++)
+            for (int x = 0; x < temp.Length; x++)
             {
-                arrLayer[i, j] = int.Parse(temp[j]);
+                arrLayer[y, x] = int.Parse(temp[x]);
             }
         }
 
