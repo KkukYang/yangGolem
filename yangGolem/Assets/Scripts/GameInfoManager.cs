@@ -20,7 +20,7 @@ public class GameInfoManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        Screen.SetResolution(1920, 1080, true);
+        Screen.SetResolution(1920, 1080, false);
 
         //userDataInfo = new UserDataInfo();
         //string jsonText = JsonWriter.Serialize(userDataInfo);

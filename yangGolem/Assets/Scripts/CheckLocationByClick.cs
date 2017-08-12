@@ -75,7 +75,6 @@ public class CheckLocationByClick : MonoBehaviour {
         bounds = grid.GetComponent<MeshCollider>().bounds;
         grid.transform.eulerAngles = tempVec;
         grid.GetComponent<MeshRenderer>().enabled = false;
-
     }
 
     void Update ()
@@ -165,7 +164,7 @@ public class CheckLocationByClick : MonoBehaviour {
 
         Vector3 selectTilePos = new Vector3(
             Mathf.Cos(Mathf.Deg2Rad * -45.0f) * (selectPoint._y - bounds.max.x / row) + (-1 * Mathf.Sin(Mathf.Deg2Rad * -45.0f) * (selectPoint._x + bounds.max.x / row))
-            , 0.0f
+            , 0.1f
             , Mathf.Sin(Mathf.Deg2Rad * -45.0f) * (selectPoint._y - bounds.max.z / col) + Mathf.Cos(Mathf.Deg2Rad * -45.0f) * (selectPoint._x + bounds.max.z / col));
 
         //x는 9를 더하고, y는 10을 더하고.

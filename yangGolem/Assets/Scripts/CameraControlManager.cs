@@ -13,7 +13,7 @@ public class CameraControlManager : MonoBehaviour
     public Vector3 initPlayerPos;
 
     //[Range(5, 20)]
-    public float orthographicSize;
+    public float fov;
     public float min;
     public float max;
 
@@ -23,10 +23,10 @@ public class CameraControlManager : MonoBehaviour
     {
         isInit = false;
         thisCamera = GetComponent<Camera>();
-        orthographicSize = thisCamera.orthographicSize = 5.0f;
+        fov = thisCamera.fieldOfView = 50.0f;
 
         this.transform.parent = player.transform;
-        this.transform.localPosition = new Vector3(0.0f, 9.42f, -16.31f);
+        this.transform.localPosition = new Vector3(0.0f, 6.0f, -3.5f);
         this.transform.parent = null;
         initCameraPos = this.transform.position;
         initPlayerPos = player.transform.position;
@@ -40,23 +40,23 @@ public class CameraControlManager : MonoBehaviour
         {
             if (Input.GetAxis("Mouse ScrollWheel") < 0)
             {
-                orthographicSize += 0.5f;
+                fov += 5.0f;
             }
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
-                orthographicSize -= 0.5f;
+                fov -= 5.0f;
             }
 
-            if (orthographicSize < min)
+            if (fov < min)
             {
-                orthographicSize = min;
+                fov = min;
             }
-            else if (orthographicSize > max)
+            else if (fov > max)
             {
-                orthographicSize = max;
+                fov = max;
             }
 
-            thisCamera.orthographicSize = Mathf.Clamp(orthographicSize, 1, 10);
+            thisCamera.fieldOfView = Mathf.Clamp(fov, 20.0f, 85.0f);
         }
     }
 
