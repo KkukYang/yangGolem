@@ -19,6 +19,7 @@ public class EdgeDetectionCameraControl : MonoBehaviour
     {
         player = this.transform.parent.GetComponent<CameraControlManager>().player;
         StartCoroutine(PlayerTransparent());
+
     }
 
 

@@ -16,12 +16,14 @@ public class GameInfoManager : MonoBehaviour
     }
 
     //public UserDataInfo userDataInfo;
+    public float timeScale = 1.0f;
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         Screen.SetResolution(1920, 1080, false);
-
+        Application.runInBackground = true;
+        Time.timeScale = timeScale;
         //userDataInfo = new UserDataInfo();
         //string jsonText = JsonWriter.Serialize(userDataInfo);
         //PlayerPrefs.SetString("jsonText", jsonText);
