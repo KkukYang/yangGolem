@@ -18,6 +18,9 @@ public class Hero : MonoBehaviour
 
     public bool isDie = false;
 
+    public Transform weaponeSlotHand;
+    public Transform weaponeSlotBack;
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -80,11 +83,18 @@ public class Hero : MonoBehaviour
 
     IEnumerator AttackState()
     {
+        heroAnimator.SetBool("bAttack", true);
+
         heroAnimator.GetComponent<AnimationEvent>().add = new AnimationEvent.Add(EventAttackCombo);
         heroAnimator.GetComponent<AnimationEvent>().end = new AnimationEvent.End(EventAttackEnd);
         while (this.heroState == EnumHeroState.Attack)
         {
             moveSpeed = 0.0f;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                heroAnimator.SetBool("bAttack", true);
+            }
 
             yield return null;
         }
@@ -137,6 +147,7 @@ public class Hero : MonoBehaviour
     {
         if(heroAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack3"))
         {
+            heroAnimator.SetBool("bAttack", false);
             heroState = EnumHeroState.Idle;
         }
         else
@@ -183,7 +194,7 @@ public class Hero : MonoBehaviour
                 && (heroState == EnumHeroState.Idle || heroState == EnumHeroState.Run || heroState == EnumHeroState.Attack))
             {
                 heroState = EnumHeroState.Attack;
-                heroAnimator.SetBool("bAttack", true);
+                //heroAnimator.SetBool("bAttack", true);
             }
 
         }

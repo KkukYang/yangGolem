@@ -18,6 +18,7 @@ public class InGameManager : MonoBehaviour
     public GameObject InGameUIRoot;
     //public UIButton testButton;
     public GameObject selectedObjectToPlace;
+    public AudioVisualizer audioVisualizer;
 
     private void Awake()
     {
@@ -32,6 +33,8 @@ public class InGameManager : MonoBehaviour
 
     void Start()
     {
+        SoundManager.PlayMusic(SoundMusic.InGame_Music);
+        audioVisualizer.aSource = SoundManager.GetMusic();
 
     }
 

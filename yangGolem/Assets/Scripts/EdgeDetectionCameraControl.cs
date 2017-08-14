@@ -32,7 +32,7 @@ public class EdgeDetectionCameraControl : MonoBehaviour
             if (Physics.Raycast(this.transform.position, this.transform.TransformDirection(Vector3.forward), out hit))
             {
                 //Debug.Log(hit.transform.name);
-                if (hit.transform.name != "player")// || hit.transform.name != "golem")
+                if (hit.transform.name != "Hero")// || hit.transform.name != "golem")
                 {
                     this.GetComponent<Camera>().enabled = true;
                     if(!bPlayerTransparent)
@@ -58,7 +58,7 @@ public class EdgeDetectionCameraControl : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.05f);
         }
     }
 
