@@ -17,6 +17,7 @@ public class Hero : MonoBehaviour
     Vector3 rot;
 
     public bool isDie = false;
+    public bool isGround = false;
 
     public Transform weaponeSlotHand;
     public Transform weaponeSlotBack;
@@ -164,7 +165,7 @@ public class Hero : MonoBehaviour
         float v = Input.GetAxis("Vertical");
         float h = Input.GetAxis("Horizontal");
         Vector3 moveDir;
-
+        isGround = _characterController.isGrounded;
         if (_characterController.isGrounded == true)
         {
             yVelocity = 0.0f;
@@ -184,6 +185,7 @@ public class Hero : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    //Debug.Log("Jump");
                     yVelocity = jumpSpeed;
                 }
             }

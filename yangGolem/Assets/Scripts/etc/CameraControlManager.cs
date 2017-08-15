@@ -56,7 +56,7 @@ public class CameraControlManager : MonoBehaviour
                 fov = max;
             }
 
-            thisCamera.fieldOfView = Mathf.Clamp(fov, 20.0f, 85.0f);
+            thisCamera.fieldOfView = Mathf.Clamp(fov, min, max);
         }
     }
 
@@ -66,7 +66,7 @@ public class CameraControlManager : MonoBehaviour
         {
             increment = player.transform.position - initPlayerPos;
             this.transform.position = new Vector3(initCameraPos.x + increment.x
-                , initCameraPos.y
+                , initCameraPos.y + increment.y
                 , initCameraPos.z + increment.z);
         }
 
