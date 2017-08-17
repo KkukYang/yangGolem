@@ -22,6 +22,8 @@ public class Hero : MonoBehaviour
     public Transform weaponeSlotHand;
     public Transform weaponeSlotBack;
 
+    //public float TestVal;
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -88,9 +90,11 @@ public class Hero : MonoBehaviour
 
         heroAnimator.GetComponent<AnimationEvent>().add = new AnimationEvent.Add(EventAttackCombo);
         heroAnimator.GetComponent<AnimationEvent>().end = new AnimationEvent.End(EventAttackEnd);
+
+        moveSpeed *= 0.1f;
+
         while (this.heroState == EnumHeroState.Attack)
         {
-            moveSpeed = 0.0f;
 
             if (Input.GetMouseButtonDown(0))
             {
