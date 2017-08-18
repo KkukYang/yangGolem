@@ -57,7 +57,26 @@ public class PopUpManager : MonoBehaviour {
                 closeMarketPopUpTimer = -1.0f;
             }
         }
-	}
+
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            if (listPopUp.Find(obj => obj.name == "PopUpInventory") == null)
+            {
+                GameObject popupInventory = ResourceManager.instance.GetPopUp("PopUpInventory");
+                popupInventory.SetActive(true);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (listPopUp.Find(obj => obj.name == "PopUpEquipment") == null)
+            {
+                GameObject popupEquipment = ResourceManager.instance.GetPopUp("PopUpEquipment");
+                popupEquipment.SetActive(true);
+            }
+        }
+
+    }
 
 
 
@@ -96,10 +115,10 @@ public class PopUpManager : MonoBehaviour {
     }
 
 
-	public bool IsInStack(GameObject obj)
-	{
-		return popupList.Contains(obj);
-	}
+	//public bool IsInStack(GameObject obj)
+	//{
+	//	return popupList.Contains(obj);
+	//}
 
 
 	public int GetPopUpCount()
