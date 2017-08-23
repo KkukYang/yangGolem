@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using JsonFx.Json;
+using System.IO;
+
 
 public class GameInfoManager : MonoBehaviour
 {
@@ -24,14 +26,6 @@ public class GameInfoManager : MonoBehaviour
         Screen.SetResolution(1920, 1080, false);
         Application.runInBackground = true;
         Time.timeScale = timeScale;
-        //userDataInfo = new UserDataInfo();
-        //string jsonText = JsonWriter.Serialize(userDataInfo);
-        //PlayerPrefs.SetString("jsonText", jsonText);
-
-        //string jsonText = PlayerPrefs.GetString("jsonText");
-        //userDataInfo = JsonReader.Deserialize<UserDataInfo>(jsonText);
-
-        //Debug.Log("");
     }
 
     void Start()
@@ -39,44 +33,92 @@ public class GameInfoManager : MonoBehaviour
 
     }
 
+    public void WriteStringToFile(string str, string filename)
+    {
+        string path = PathForDocumentsFile(filename);
+        FileInfo fileInfo = new FileInfo(path);
+
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            if (fileInfo.Exists)
+            {
+                return;
+            }
+            else
+            {
+                FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(file);
+                sw.WriteLine(str);
+
+                sw.Close();
+                file.Close();
+            }
+        }
+        else
+        {
+            FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write);
+            StreamWriter sw = new StreamWriter(file);
+            sw.WriteLine(str);
+
+            sw.Close();
+            file.Close();
+        }
+
+
+    }
+
+
+    public string ReadStringFromFile(string filename)
+    {
+        string path = PathForDocumentsFile(filename);
+
+        if (File.Exists(path))
+        {
+            FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(file);
+
+            string str = null;
+            str = sr.ReadLine();
+
+            sr.Close();
+            file.Close();
+
+            return str;
+        }
+
+        else
+        {
+            return null;
+        }
+    }
+
+
+    public string PathForDocumentsFile(string filename)
+    {
+        if (Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            string path = Application.dataPath.Substring(0, Application.dataPath.Length - 5);
+            path = path.Substring(0, path.LastIndexOf('/'));
+            return Path.Combine(Path.Combine(path, "Documents"), filename);
+        }
+        else if (Application.platform == RuntimePlatform.Android)
+        {
+            string path = Application.persistentDataPath;
+            path = path.Substring(0, path.LastIndexOf('/'));
+            return Path.Combine(path, filename);
+        }
+        else
+        {
+            string path = Application.dataPath;
+            path = path.Substring(0, path.LastIndexOf('/'));
+            return Path.Combine(path, filename);
+        }
+    }
+
+
     void Update()
     {
 
     }
 
-
-
-    //IEnumerator LoopForObj(GameObject obj)
-    //{
-    //    while (obj.activeSelf)
-    //    {
-    //        Time.timeScale = 0.0f;
-    //        yield return null;
-    //    }
-
-    //}
 }
-
-
-//public class UserDataInfo
-//{
-//    public int user_no;
-//    public Dictionary<string, string> dicData;
-//    public List<string> listData;
-
-//    public UserDataInfo()
-//    {
-//        user_no = 1000000001;
-//        dicData = new Dictionary<string, string>();
-//        listData = new List<string>();
-
-//        {
-//            for (int i = 0; i < 10; i++)
-//            {
-//                dicData.Add(i.ToString(), "a" + (i * 123).ToString());
-//                listData.Add("a" + (i * 1123).ToString());
-//            }
-//        }
-//    }
-//}
-

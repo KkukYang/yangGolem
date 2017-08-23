@@ -173,7 +173,8 @@ public static class SoundManager
             case SoundMusic.InGame_Music:
                 //return Resources.Load("Sound/Background/BGM_" + Random.Range(1, 2+1)) as AudioClip;
                 //break;
-                return Resources.Load("Sound/Background/BGM_1") as AudioClip;
+                //return Resources.Load("Sound/Background/BGM_1") as AudioClip;
+                return Resources.Load("Sound/Background/2TeamMusic_6") as AudioClip;
                 break;
 
         }
