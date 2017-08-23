@@ -29,8 +29,8 @@ public class CheckLocationByClick : MonoBehaviour {
     public int clickLayer = 8;
     public int blockLayer = 9;
 
-    public int col = 20;
-    public int row = 20;
+    public int col = 20; //열이 몇개?
+    public int row = 20; //행이 몇개?
 
     public SelectPoint selectPoint;
     //public SelectPoint preSelectPoint;

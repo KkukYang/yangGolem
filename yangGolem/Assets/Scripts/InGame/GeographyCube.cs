@@ -8,6 +8,12 @@ public class GeographyCube : MonoBehaviour
     public bool isEnableBuild = false;
     public bool isCurSelectFromTileInfo = false;
 
+    public int positionID;
+    public int layerID;
+
+    public GameObject grid;
+    public GameObject cube;
+
     private void OnEnable()
     {
         if(cubeType == EnumCubeType.NULL 
@@ -20,6 +26,10 @@ public class GeographyCube : MonoBehaviour
         {
             isEnableBuild = true;
         }
+
+        cube = transform.Find("Cube").gameObject;
+        grid = transform.Find("Grid").gameObject;
+
     }
 
     void Start()
@@ -31,11 +41,34 @@ public class GeographyCube : MonoBehaviour
     {
         if (TileInfoManager.instance.curSelectCube != null && isEnableBuild && !isCurSelectFromTileInfo)
         {
-            transform.Find("Grid").gameObject.SetActive(true);
+            grid.SetActive(true);
         }
         else
         {
-            transform.Find("Grid").gameObject.SetActive(false);
+            grid.SetActive(false);
+        }
+
+        if(isCurSelectFromTileInfo)
+        {
+            if(cube.GetComponent<BoxCollider>() != null)
+            {
+                cube.GetComponent<BoxCollider>().enabled = false;
+            }
+            else if(cube.GetComponent<MeshCollider>() != null)
+            {
+                cube.GetComponent<MeshCollider>().enabled = false;
+            }
+        }
+        else
+        {
+            if (cube.GetComponent<BoxCollider>() != null)
+            {
+                cube.GetComponent<BoxCollider>().enabled = true;
+            }
+            else if (cube.GetComponent<MeshCollider>() != null)
+            {
+                cube.GetComponent<MeshCollider>().enabled = true;
+            }
         }
 
     }

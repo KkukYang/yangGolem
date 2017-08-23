@@ -50,11 +50,12 @@ public class TileInfoManager : MonoBehaviour
     {
         float upVal = 0.0001f;
 
-        for (int y = 0; y < CheckLocationByClick.instance.col; y++)
+        for (int y = 0; y < CheckLocationByClick.instance.row; y++)
         {
-            for (int x = 0; x < CheckLocationByClick.instance.row; x++)
+            for (int x = 0; x < CheckLocationByClick.instance.col; x++)
             {
-                foreach (int type in stageInfo.arrListCubeInStage[(y * 20) + x])
+                int _layer = 0; //층
+                foreach (int type in stageInfo.arrListCubeInStage[(y * CheckLocationByClick.instance.col) + x])
                 {
                     switch (type)
                     {
@@ -62,7 +63,7 @@ public class TileInfoManager : MonoBehaviour
                             {
                                 GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.Normal.ToString()]) as GameObject;
                                 //좌표에 따른 위치 지정.
-                                SetTileOnLand(_tileObj, floorTileGroup, x, y, EnumCubeType.Normal);
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.Normal);
                             }
                             break;
 
@@ -70,7 +71,7 @@ public class TileInfoManager : MonoBehaviour
                             {
                                 GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.Grass.ToString()]) as GameObject;
                                 //좌표에 따른 위치 지정.
-                                SetTileOnLand(_tileObj, floorTileGroup, x, y, EnumCubeType.Grass);
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.Grass);
 
                             }
                             break;
@@ -79,7 +80,7 @@ public class TileInfoManager : MonoBehaviour
                             {
                                 GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.Soil.ToString()]) as GameObject;
                                 //좌표에 따른 위치 지정.
-                                SetTileOnLand(_tileObj, floorTileGroup, x, y, EnumCubeType.Soil);
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.Soil);
                             }
                             break;
 
@@ -87,7 +88,7 @@ public class TileInfoManager : MonoBehaviour
                             {
                                 GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.Water.ToString()]) as GameObject;
                                 //좌표에 따른 위치 지정.
-                                SetTileOnLand(_tileObj, floorTileGroup, x, y, EnumCubeType.Water);
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.Water);
                             }
                             break;
 
@@ -103,16 +104,18 @@ public class TileInfoManager : MonoBehaviour
 
     }
 
-    void SetTileOnLand(GameObject _obj, GameObject _group, int _x, int _y, EnumCubeType _type)
+    void SetTileOnLand(GameObject _obj, GameObject _group, int _x, int _y, int _layer, EnumCubeType _type)
     {
         _obj.transform.parent = _group.transform;
         _obj.transform.localPosition = new Vector3(_x * 0.5f - (0.5f * 0.5f) * (CheckLocationByClick.instance.row - 1)
-            , 0.0f//Random.Range(-0.05f, 0.0f)
+            , _layer * 0.5f
             , _y * -0.5f + (0.5f * 0.5f) * (CheckLocationByClick.instance.col - 1));
         _obj.transform.eulerAngles = new Vector3(0.0f, 45.0f, 0.0f);
         _obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
         _obj.GetComponent<GeographyCube>().cubeType = _type;
+        _obj.GetComponent<GeographyCube>().positionID = _y * CheckLocationByClick.instance.col + _x;
+        _obj.GetComponent<GeographyCube>().layerID = _layer;
 
         listGeoCube.Add(_obj.GetComponent<GeographyCube>());
 
@@ -149,8 +152,8 @@ public class TileInfoManager : MonoBehaviour
             {
                 for (int j = 0; j < CheckLocationByClick.instance.col; j++)
                 {
-                    stageInfo.arrListCubeInStage[i * 20 + j] = new List<int>(1);
-                    stageInfo.arrListCubeInStage[i * 20 + j].Add((int)EnumCubeType.Grass);
+                    stageInfo.arrListCubeInStage[i * CheckLocationByClick.instance.col + j] = new List<int>(1);
+                    stageInfo.arrListCubeInStage[i * CheckLocationByClick.instance.col + j].Add((int)EnumCubeType.Normal);
                 }
             }
         }
@@ -189,16 +192,16 @@ public class TileInfoManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.C) && curSelectCube == null) //예를들어 Normal
+        if (Input.GetKeyDown(KeyCode.C) && curSelectCube == null) //예를들어 Normal
         {
-            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/Normal")) as GameObject;
-            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.Normal;
+            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/Grass")) as GameObject;
+            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.Grass;
             curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = true;
             curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
             curSelectCube.SetActive(true);
         }
 
-        if(curSelectCube != null)
+        if (curSelectCube != null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -211,7 +214,23 @@ public class TileInfoManager : MonoBehaviour
                 curSelectCube.transform.eulerAngles = new Vector3(0.0f, 45.0f, 0.0f);
             }
 
+            if (Input.GetMouseButtonDown(0))
+            {
+                int _positionID = hit.transform.parent.GetComponent<GeographyCube>().positionID;
+                int _layerID = hit.transform.parent.GetComponent<GeographyCube>().layerID;
+
+                curSelectCube.transform.parent = floorTileGroup.transform;
+                curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = false;
+                curSelectCube.GetComponent<GeographyCube>().positionID = _positionID;
+                curSelectCube.GetComponent<GeographyCube>().layerID = _layerID + 1;
+                curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Cube"));
+                stageInfo.arrListCubeInStage[_positionID].Add((int)curSelectCube.GetComponent<GeographyCube>().cubeType);
+                listGeoCube.Add(curSelectCube.GetComponent<GeographyCube>());
+
+                curSelectCube = null;
+            }
         }
+
 
     }
 
