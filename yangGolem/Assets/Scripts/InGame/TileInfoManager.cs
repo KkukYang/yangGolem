@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using JsonFx.Json;
 
@@ -23,9 +24,19 @@ public class TileInfoManager : MonoBehaviour
     }
 
     public StageInfo stageInfo;
-    public GameObject floorTileGroup;
     public List<GeographyCube> listGeoCube = new List<GeographyCube>();
     public GameObject curSelectCube = null;
+    public GameObject floorTileGroup;
+
+
+    public GameObject curSelectObject = null; //나무 or 건물.
+    public List<GeographyCube> listCurSelectCubes = new List<GeographyCube>();
+    public string[] arrStrCurSelectObjectName = null;
+    public bool isConstruction = false;
+    public int layerIDMin;
+
+    public int col = 20; //열이 몇개?
+    public int row = 20; //행이 몇개?
 
     //Test
     public float testX, testY;
@@ -50,12 +61,12 @@ public class TileInfoManager : MonoBehaviour
     {
         float upVal = 0.0001f;
 
-        for (int y = 0; y < CheckLocationByClick.instance.row; y++)
+        for (int y = 0; y < row; y++)
         {
-            for (int x = 0; x < CheckLocationByClick.instance.col; x++)
+            for (int x = 0; x < col; x++)
             {
                 int _layer = 0; //층
-                foreach (int type in stageInfo.arrListCubeInStage[(y * CheckLocationByClick.instance.col) + x])
+                foreach (int type in stageInfo.arrListCubeInStage[(y * col) + x])
                 {
                     switch (type)
                     {
@@ -91,6 +102,34 @@ public class TileInfoManager : MonoBehaviour
                                 SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.Water);
                             }
                             break;
+                        case (int)EnumCubeType.SlopeUp:
+                            {
+                                GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.SlopeUp.ToString()]) as GameObject;
+                                //좌표에 따른 위치 지정.
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.SlopeUp);
+                            }
+                            break;
+                        case (int)EnumCubeType.SlopeDown:
+                            {
+                                GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.SlopeDown.ToString()]) as GameObject;
+                                //좌표에 따른 위치 지정.
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.SlopeDown);
+                            }
+                            break;
+                        case (int)EnumCubeType.SlopeLeft:
+                            {
+                                GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.SlopeLeft.ToString()]) as GameObject;
+                                //좌표에 따른 위치 지정.
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.SlopeLeft);
+                            }
+                            break;
+                        case (int)EnumCubeType.SlopeRight:
+                            {
+                                GameObject _tileObj = Instantiate(ResourceManager.instance.floorTile[EnumCubeType.SlopeRight.ToString()]) as GameObject;
+                                //좌표에 따른 위치 지정.
+                                SetTileOnLand(_tileObj, floorTileGroup, x, y, _layer++, EnumCubeType.SlopeRight);
+                            }
+                            break;
 
                         default:
                             {
@@ -107,14 +146,14 @@ public class TileInfoManager : MonoBehaviour
     void SetTileOnLand(GameObject _obj, GameObject _group, int _x, int _y, int _layer, EnumCubeType _type)
     {
         _obj.transform.parent = _group.transform;
-        _obj.transform.localPosition = new Vector3(_x * 0.5f - (0.5f * 0.5f) * (CheckLocationByClick.instance.row - 1)
-            , _layer * 0.5f
-            , _y * -0.5f + (0.5f * 0.5f) * (CheckLocationByClick.instance.col - 1));
+        _obj.transform.localPosition = new Vector3(_x - (0.5f * 0.5f) * (row - 1)
+            , _layer
+            , -_y + (0.5f * 0.5f) * (col - 1));
         _obj.transform.eulerAngles = new Vector3(0.0f, 45.0f, 0.0f);
-        _obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        _obj.transform.localScale = Vector3.one;
 
         _obj.GetComponent<GeographyCube>().cubeType = _type;
-        _obj.GetComponent<GeographyCube>().positionID = _y * CheckLocationByClick.instance.col + _x;
+        _obj.GetComponent<GeographyCube>().positionID = _y * col + _x;
         _obj.GetComponent<GeographyCube>().layerID = _layer;
 
         listGeoCube.Add(_obj.GetComponent<GeographyCube>());
@@ -146,14 +185,14 @@ public class TileInfoManager : MonoBehaviour
         else
         {
             stageInfo = new StageInfo();
-            stageInfo.arrListCubeInStage = new List<int>[CheckLocationByClick.instance.row * CheckLocationByClick.instance.col];
+            stageInfo.arrListCubeInStage = new List<int>[row * col];
 
-            for (int i = 0; i < CheckLocationByClick.instance.row; i++)
+            for (int i = 0; i < row; i++)
             {
-                for (int j = 0; j < CheckLocationByClick.instance.col; j++)
+                for (int j = 0; j < col; j++)
                 {
-                    stageInfo.arrListCubeInStage[i * CheckLocationByClick.instance.col + j] = new List<int>(1);
-                    stageInfo.arrListCubeInStage[i * CheckLocationByClick.instance.col + j].Add((int)EnumCubeType.Normal);
+                    stageInfo.arrListCubeInStage[i * col + j] = new List<int>(1);
+                    stageInfo.arrListCubeInStage[i * col + j].Add((int)EnumCubeType.Normal);
                 }
             }
         }
@@ -192,7 +231,9 @@ public class TileInfoManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C) && curSelectCube == null) //예를들어 Normal
+
+        //나중에 UI팝업으로 뺄것.
+        if (Input.GetKeyDown(KeyCode.Z) && curSelectCube == null) //예를들어 Normal
         {
             curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/Grass")) as GameObject;
             curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.Grass;
@@ -200,7 +241,57 @@ public class TileInfoManager : MonoBehaviour
             curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
             curSelectCube.SetActive(true);
         }
+        else if (Input.GetKeyDown(KeyCode.C) && curSelectCube == null) //예를들어 Normal
+        {
+            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/Soil")) as GameObject;
+            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.Soil;
+            curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = true;
+            curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
+            curSelectCube.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.X) && curSelectCube == null) //예를들어 Normal
+        {
+            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/Water")) as GameObject;
+            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.Water;
+            curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = true;
+            curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
+            curSelectCube.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.V) && curSelectCube == null) //예를들어 Normal
+        {
+            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/SlopeUp")) as GameObject;
+            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.SlopeUp;
+            curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = true;
+            curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
+            curSelectCube.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.B) && curSelectCube == null) //예를들어 Normal
+        {
+            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/SlopeDown")) as GameObject;
+            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.SlopeDown;
+            curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = true;
+            curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
+            curSelectCube.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.N) && curSelectCube == null) //예를들어 Normal
+        {
+            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/SlopeLeft")) as GameObject;
+            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.SlopeLeft;
+            curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = true;
+            curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
+            curSelectCube.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.M) && curSelectCube == null) //예를들어 Normal
+        {
+            curSelectCube = Instantiate(Resources.Load("Prefabs/FloorTile/SlopeRight")) as GameObject;
+            curSelectCube.GetComponent<GeographyCube>().cubeType = EnumCubeType.SlopeRight;
+            curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = true;
+            curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Default"));
+            curSelectCube.SetActive(true);
+        }
 
+
+        //지형 짓기.
         if (curSelectCube != null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -216,18 +307,139 @@ public class TileInfoManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                int _positionID = hit.transform.parent.GetComponent<GeographyCube>().positionID;
-                int _layerID = hit.transform.parent.GetComponent<GeographyCube>().layerID;
+                if(
+                    (hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.Water
+                    && hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeUp
+                    && hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeDown
+                    && hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeLeft
+                    && hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeRight) ||
+                    (
+                        hit.transform.parent.GetComponent<GeographyCube>().cubeType == EnumCubeType.Water
+                        && curSelectCube.GetComponent<GeographyCube>().cubeType == EnumCubeType.Water
+                    ))
+                {
+                    int _positionID = hit.transform.parent.GetComponent<GeographyCube>().positionID;
+                    int _layerID = hit.transform.parent.GetComponent<GeographyCube>().layerID;
 
-                curSelectCube.transform.parent = floorTileGroup.transform;
-                curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = false;
-                curSelectCube.GetComponent<GeographyCube>().positionID = _positionID;
-                curSelectCube.GetComponent<GeographyCube>().layerID = _layerID + 1;
-                curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Cube"));
-                stageInfo.arrListCubeInStage[_positionID].Add((int)curSelectCube.GetComponent<GeographyCube>().cubeType);
-                listGeoCube.Add(curSelectCube.GetComponent<GeographyCube>());
+                    curSelectCube.transform.parent = floorTileGroup.transform;
+                    curSelectCube.GetComponent<GeographyCube>().isCurSelectFromTileInfo = false;
+                    curSelectCube.GetComponent<GeographyCube>().positionID = _positionID;
+                    curSelectCube.GetComponent<GeographyCube>().layerID = _layerID + 1;
+                    curSelectCube.transform.SetChildLayer(LayerMask.NameToLayer("Cube"));
+                    stageInfo.arrListCubeInStage[_positionID].Add((int)curSelectCube.GetComponent<GeographyCube>().cubeType);
+                    listGeoCube.Add(curSelectCube.GetComponent<GeographyCube>());
 
-                curSelectCube = null;
+                    if (curSelectCube.GetComponent<GeographyCube>().cubeType != EnumCubeType.Water
+                        //&& curSelectCube.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeUp
+                        //&& curSelectCube.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeDown
+                        //&& curSelectCube.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeLeft
+                        //&& curSelectCube.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeRight
+                        )
+                    {
+                        if (curSelectCube.transform.Find("Cube").GetComponent<BoxCollider>() != null)
+                        {
+                            curSelectCube.transform.Find("Cube").GetComponent<BoxCollider>().enabled = true;
+                        }
+                        else if (curSelectCube.transform.Find("Cube").GetComponent<MeshCollider>() != null)
+                        {
+                            curSelectCube.transform.Find("Cube").GetComponent<MeshCollider>().enabled = true;
+                        }
+                    }
+
+                    curSelectCube = null;
+                }
+            }
+        }
+
+
+        //건물이나 나무짓기.
+        if (isConstruction)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            int mask = 1 << LayerMask.NameToLayer("Cube");
+            //mask = ~mask; //반전일 경우.
+
+            if (Physics.Raycast(ray, out hit, 100.0f, mask))
+            {
+                int _stdPositionId = hit.transform.parent.GetComponent<GeographyCube>().positionID;
+                int _stdLayerId = hit.transform.parent.GetComponent<GeographyCube>().layerID;
+
+                if(arrStrCurSelectObjectName != null)
+                {
+                    if(_stdPositionId % col + int.Parse(arrStrCurSelectObjectName[1]) <= col 
+                        && _stdPositionId / row + int.Parse(arrStrCurSelectObjectName[2]) <= row)
+                    {
+                        foreach (GeographyCube _cube in listCurSelectCubes)
+                        {
+                            _cube.isCurSelectFromTileInfo = false;
+                        }
+
+                        listCurSelectCubes.Clear();
+
+                        //좌표중 가장 높이 있는것을 찾아야.
+                        //그리드에 켜놓기위해.
+                        for (int i = 0; i < int.Parse(arrStrCurSelectObjectName[1]); i++)
+                        {
+                            for (int j = 0; j < int.Parse(arrStrCurSelectObjectName[2]); j++)
+                            {
+                                var layerIDMax = (from _cube in listGeoCube
+                                                  where _cube.positionID == _stdPositionId + (i * 20) + j
+                                                  group _cube by _cube.layerID into g
+                                                  select g.Max(p => p.layerID)).Max();
+
+                                listCurSelectCubes.Add(listGeoCube.Find(_cube => _cube.positionID == _stdPositionId + (i * 20) + j && _cube.layerID == layerIDMax));
+                            }
+                        }
+
+                        layerIDMin = (from _cube in listCurSelectCubes
+                                      group _cube by _cube.layerID into g
+                                      select g.Min(p => p.layerID)).Min();
+
+                        foreach (GeographyCube _cube in listCurSelectCubes)
+                        {
+                            _cube.isCurSelectFromTileInfo = true;
+                        }
+
+                        //curSelectObject 중앙에 위치시키기 위해.
+                        Vector3 _vecStdCube = listCurSelectCubes[0].transform.localPosition;
+                        curSelectObject.transform.localPosition = new Vector3(_vecStdCube.x + (int.Parse(arrStrCurSelectObjectName[1]) - 1) * 0.5f
+                            , _vecStdCube.y
+                            , _vecStdCube.z - (int.Parse(arrStrCurSelectObjectName[2]) - 1) * 0.5f);
+
+
+                    }
+                }
+            }
+        }
+
+
+
+        //놓을곳 지정.
+        if (isConstruction && Input.GetMouseButtonUp(0)
+            && PopUpManager.instance.listPopUp.Find(popup => popup.name == "PopUpTest") == null)
+        {
+            bool result = true;
+
+            foreach (GeographyCube _cube in listCurSelectCubes)
+            {
+                if (!_cube.isSuitable)
+                {
+                    result = false;
+                    break;
+                }
+            }
+
+            if (result)
+            {
+                curSelectObject.transform.parent = floorTileGroup.transform;
+                curSelectObject.layer = LayerMask.NameToLayer("FieldObject");
+                curSelectObject.transform.SetChildLayer(LayerMask.NameToLayer("FieldObject"));
+
+
+
+                curSelectObject = null;
+                isConstruction = false;
             }
         }
 
@@ -257,7 +469,10 @@ public enum EnumCubeType
     Grass,
     Soil,
     Water,
-    Slope,
+    SlopeRight,
+    SlopeLeft,
+    SlopeUp,
+    SlopeDown,
 }
 
 public class StageInfo

@@ -16,8 +16,6 @@ public class AudioVisualizer : MonoBehaviour
 
     public Vector3 gravity = new Vector3(0.0f, 0.25f, 0.0f);
 
-    public bool isStart = false;
-
     public float testFloat = 1.0f;
     public FFTWindow testFFT;
 
@@ -30,21 +28,21 @@ public class AudioVisualizer : MonoBehaviour
 
         GameObject tempCube;
 
-        for (int i = 0; i < samples.Length; i++)
+        for (int i = 0; i < samples.Length-1; i++)
         {
             tempCube = Instantiate(cube);
             tempCube.transform.parent = this.transform;
-            tempCube.transform.localPosition = new Vector3(i * -(10.0f / 64.0f), 0.0f, 0.0f);
+            tempCube.transform.localPosition = new Vector3(i * -(20.0f / 64.0f), 0.0f, 0.0f);
             tempCube.transform.eulerAngles = new Vector3(0.0f, -45.0f, 0.0f);
 
             cubesTransform[i] = tempCube.GetComponent<Transform>();
         }
 
-        for (int i = 0; i < samples.Length; i++)
+        for (int i = 0; i < samples.Length - 1; i++)
         {
             tempCube = Instantiate(cube2);
             tempCube.transform.parent = this.transform;
-            tempCube.transform.localPosition = new Vector3(0.0f, 0.0f, i * -(10.0f / 64.0f));
+            tempCube.transform.localPosition = new Vector3(0.0f, 0.0f, i * -(20.0f / 64.0f));
             tempCube.transform.eulerAngles = new Vector3(0.0f, -45.0f, 0.0f);
 
             cubesTransform2[i] = tempCube.GetComponent<Transform>();
@@ -59,47 +57,54 @@ public class AudioVisualizer : MonoBehaviour
             yield return null;
         }
 
-        isStart = true;
+        StartCoroutine("StartCubeAction");
     }
+
+    IEnumerator StartCubeAction()
+    {
+        while(true)
+        {
+            aSource.GetSpectrumData(this.samples, 0, testFFT);
+
+            for (int i = 0; i < samples.Length - 1; i++)
+            {
+                cubePos.Set(cubesTransform[i].localPosition.x, Mathf.Clamp(samples[i] * (50 + i * i), 0, 50) * testFloat, cubesTransform[i].localPosition.z);
+
+                if (cubePos.y >= cubesTransform[i].localPosition.y)
+                {
+                    cubesTransform[i].localPosition = cubePos;
+                }
+                else
+                {
+                    cubesTransform[i].localPosition -= gravity;
+                }
+
+            }
+
+            for (int i = samples.Length - 2; i >= 0; i--)
+            {
+                cubePos.Set(cubesTransform2[i].localPosition.x, Mathf.Clamp(samples[i] * (50 + i * i), 0, 50) * testFloat, cubesTransform2[i].localPosition.z);
+
+                if (cubePos.y >= cubesTransform2[i].localPosition.y)
+                {
+                    cubesTransform2[i].localPosition = cubePos;
+                }
+                else
+                {
+                    cubesTransform2[i].localPosition -= gravity;
+                }
+
+            }
+
+            yield return CoroutineManager.instance.GetWaitForSeconds(0.03f);
+        }
+    }
+
+
 
     void Update()
     {
-        if(!isStart)
-        {
-            return;
-        }
 
-        aSource.GetSpectrumData(this.samples, 0, testFFT);
-
-        for (int i = 0; i < samples.Length; i++)
-        {
-            cubePos.Set(cubesTransform[i].position.x, Mathf.Clamp(samples[i] * (50 + i * i), 0, 50) * testFloat, cubesTransform[i].position.z);
-
-            if (cubePos.y >= cubesTransform[i].position.y)
-            {
-                cubesTransform[i].position = cubePos;
-            }
-            else
-            {
-                cubesTransform[i].position -= gravity;
-            }
-
-        }
-
-        for (int i = samples.Length-1; i >= 0; i--)
-        {
-            cubePos.Set(cubesTransform2[i].position.x, Mathf.Clamp(samples[i] * (50 + i * i), 0, 50) * testFloat, cubesTransform2[i].position.z);
-
-            if (cubePos.y >= cubesTransform2[i].position.y)
-            {
-                cubesTransform2[i].position = cubePos;
-            }
-            else
-            {
-                cubesTransform2[i].position -= gravity;
-            }
-
-        }
 
     }
 }

@@ -17,7 +17,7 @@ public class InGameManager : MonoBehaviour
 
     public GameObject InGameUIRoot;
     //public UIButton testButton;
-    public GameObject selectedObjectToPlace;
+    //public GameObject selectedObjectToPlace;
     public AudioVisualizer audioVisualizer;
 
     private void Awake()
