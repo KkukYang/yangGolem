@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using JsonFx.Json;
+using System;
 
 public class TileInfoManager : MonoBehaviour
 {
@@ -60,7 +61,6 @@ public class TileInfoManager : MonoBehaviour
     void SetFloorTile()
     {
         float upVal = 0.0001f;
-
         for (int y = 0; y < row; y++)
         {
             for (int x = 0; x < col; x++)
@@ -307,7 +307,7 @@ public class TileInfoManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if(
+                if (
                     (hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.Water
                     && hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeUp
                     && hit.transform.parent.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeDown
@@ -365,9 +365,9 @@ public class TileInfoManager : MonoBehaviour
                 int _stdPositionId = hit.transform.parent.GetComponent<GeographyCube>().positionID;
                 int _stdLayerId = hit.transform.parent.GetComponent<GeographyCube>().layerID;
 
-                if(arrStrCurSelectObjectName != null)
+                if (arrStrCurSelectObjectName != null)
                 {
-                    if(_stdPositionId % col + int.Parse(arrStrCurSelectObjectName[1]) <= col 
+                    if (_stdPositionId % col + int.Parse(arrStrCurSelectObjectName[1]) <= col
                         && _stdPositionId / row + int.Parse(arrStrCurSelectObjectName[2]) <= row)
                     {
                         foreach (GeographyCube _cube in listCurSelectCubes)
@@ -384,11 +384,11 @@ public class TileInfoManager : MonoBehaviour
                             for (int j = 0; j < int.Parse(arrStrCurSelectObjectName[2]); j++)
                             {
                                 var layerIDMax = (from _cube in listGeoCube
-                                                  where _cube.positionID == _stdPositionId + (i * 20) + j
+                                                  where _cube.positionID == _stdPositionId + (i * col) + j
                                                   group _cube by _cube.layerID into g
                                                   select g.Max(p => p.layerID)).Max();
 
-                                listCurSelectCubes.Add(listGeoCube.Find(_cube => _cube.positionID == _stdPositionId + (i * 20) + j && _cube.layerID == layerIDMax));
+                                listCurSelectCubes.Add(listGeoCube.Find(_cube => _cube.positionID == _stdPositionId + (i * col) + j && _cube.layerID == layerIDMax));
                             }
                         }
 
@@ -436,7 +436,15 @@ public class TileInfoManager : MonoBehaviour
                 curSelectObject.layer = LayerMask.NameToLayer("FieldObject");
                 curSelectObject.transform.SetChildLayer(LayerMask.NameToLayer("FieldObject"));
 
+                for (int i = 0; i < int.Parse(arrStrCurSelectObjectName[1]); i++)
+                {
+                    for (int j = 0; j < int.Parse(arrStrCurSelectObjectName[2]); j++)
+                    {
+                        int _positionID = listCurSelectCubes[0].positionID;
 
+                        stageInfo.arrListCubeInStage[_positionID + (i * col) + j].Add(int.Parse(arrStrCurSelectObjectName[3]) * 10 + ((i == 0 && j == 0) ? 1 : 0));
+                    }
+                }
 
                 curSelectObject = null;
                 isConstruction = false;
