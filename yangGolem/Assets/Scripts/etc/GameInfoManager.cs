@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using JsonFx.Json;
+using LitJson;
 using System.IO;
 
 
@@ -20,18 +21,52 @@ public class GameInfoManager : MonoBehaviour
     //public UserDataInfo userDataInfo;
     public float timeScale = 1.0f;
 
+    public PlayerInventory playerInventory;
+
+    public bool isInit = false;
+
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         Screen.SetResolution(1920, 1080, false);
         Application.runInBackground = true;
         Time.timeScale = timeScale;
+		Application.targetFrameRate = 60;
+
+        InitializePlayerInventory();
     }
 
     void Start()
     {
 
     }
+
+
+
+    private void InitializePlayerInventory()
+    {
+        //바닥 타일 데이터 셋팅. 실제 큐브 객체생성은 하지 않음.
+
+        string jsonText = ReadStringFromFile("playerInventory");
+        Debug.Log("InitializeStage() : " + jsonText);
+
+        if (jsonText != null && !isInit)
+        {
+            playerInventory = JsonFx.Json.JsonReader.Deserialize<PlayerInventory>(jsonText);
+        }
+        else
+        {
+            playerInventory = new PlayerInventory();
+            playerInventory.dicPlayerInventory = new Dictionary<string, int>();
+
+        }
+
+    }
+
+
+
+
+
 
     public void WriteStringToFile(string str, string filename)
     {
@@ -118,7 +153,58 @@ public class GameInfoManager : MonoBehaviour
 
     void Update()
     {
-
+        playerInventory.ToString();
     }
 
+    private void OnApplicationQuit()
+    {
+        string jsonText = JsonMapper.ToJson(playerInventory);
+        Debug.Log("playerInventory : " + jsonText);
+        GameInfoManager.instance.WriteStringToFile(jsonText, "playerInventory");
+    }
+}
+
+public class FieldObjectInfoFromJson
+{
+    int id { get; set; }
+    string name { get; set; }
+}
+
+public class PlayerInventory
+{
+    public Dictionary<string, int> dicPlayerInventory { get; set; }
+}
+
+[System.Serializable]
+public class MonsterInfo
+{
+    public int monsterID { get; set; }
+    public string monsterName { get; set; }
+    public int positionID { get; set; } //항상 최신화.
+    public int layerID { get; set; }    //항상 최신화.
+}
+
+
+public class MonsterInfoInStage
+{
+    //최대 개체수.
+    public Dictionary<string, int> dicMonsterMaxCount { get; set; }     // key : monsterID
+
+    //데이터상의 월드 몬스터.
+    public Dictionary<string, List<MonsterInfo>> dicMonsterInfo { get; set; }  // key : monsterID  Value : List<MonsterInfo>
+
+    public MonsterInfoInStage()
+    {
+        dicMonsterMaxCount = new Dictionary<string, int>();
+        dicMonsterInfo = new Dictionary<string, List<MonsterInfo>>();
+    }
+}
+
+[System.Serializable]
+public class ItemOnLandInfo
+{
+    public int itemID { get; set; }
+    public string itemName { get; set; }
+    public int positionID { get; set; } //항상 최신화.
+    public int layerID { get; set; }    //항상 최신화.
 }

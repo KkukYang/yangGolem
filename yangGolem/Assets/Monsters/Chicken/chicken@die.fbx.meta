@@ -1,0 +1,438 @@
+fileFormatVersion: 2
+guid: e90d78dbed1cd4c6a99112e3e624db74
+timeCreated: 1504851393
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: ankle
+    100002: ankle 1
+    100004: Ankle_IK
+    100006: Ankle_IK 1
+    100008: ball
+    100010: ball 1
+    100012: Ball_IK
+    100014: Ball_IK 1
+    100016: //RootNode
+    100018: chickenBaseModel
+    100020: chickenBeakModel
+    100022: chickenLegModel
+    100024: chickenWing_LModel
+    100026: chickenWing_RModel
+    100028: global_CTRL
+    100030: group_Ankle
+    100032: group_Ankle 1
+    100034: group_Heal
+    100036: group_Heal 1
+    100038: group_Toe
+    100040: group_Toe 1
+    100042: group_Toe_L
+    100044: group_Toe_R
+    100046: joint10
+    100048: joint11
+    100050: joint11 1
+    100052: joint12
+    100054: joint12 1
+    100056: joint2
+    100058: joint3
+    100060: joint32
+    100062: joint33
+    100064: joint34
+    100066: joint35
+    100068: joint37
+    100070: joint38
+    100072: joint39
+    100074: joint4
+    100076: joint40
+    100078: joint41
+    100080: joint42
+    100082: joint42 1
+    100084: joint43
+    100086: joint43 1
+    100088: joint44
+    100090: joint44 1
+    100092: joint45
+    100094: joint46
+    100096: joint46 1
+    100098: joint47
+    100100: joint47 1
+    100102: joint48
+    100104: joint48 1
+    100106: joint5
+    100108: joint6
+    100110: joint6 1
+    100112: joint66
+    100114: joint7
+    100116: joint7 1
+    100118: joint71
+    100120: joint77
+    100122: joint8
+    100124: joint9
+    100126: knee
+    100128: knee 1
+    100130: leg_L_CTRL
+    100132: leg_R_CTRL
+    100134: neck
+    100136: pelvis_CTRL
+    100138: root
+    100140: thight_L
+    100142: thight_L1
+    100144: toe
+    100146: toe 1
+    100148: Toe_IK
+    100150: Toe_IK 1
+    100152: wing_L
+    100154: wing_L_Ctrl
+    100156: wing_R
+    100158: wing_R_Ctrl
+    400000: ankle
+    400002: ankle 1
+    400004: Ankle_IK
+    400006: Ankle_IK 1
+    400008: ball
+    400010: ball 1
+    400012: Ball_IK
+    400014: Ball_IK 1
+    400016: //RootNode
+    400018: chickenBaseModel
+    400020: chickenBeakModel
+    400022: chickenLegModel
+    400024: chickenWing_LModel
+    400026: chickenWing_RModel
+    400028: global_CTRL
+    400030: group_Ankle
+    400032: group_Ankle 1
+    400034: group_Heal
+    400036: group_Heal 1
+    400038: group_Toe
+    400040: group_Toe 1
+    400042: group_Toe_L
+    400044: group_Toe_R
+    400046: joint10
+    400048: joint11
+    400050: joint11 1
+    400052: joint12
+    400054: joint12 1
+    400056: joint2
+    400058: joint3
+    400060: joint32
+    400062: joint33
+    400064: joint34
+    400066: joint35
+    400068: joint37
+    400070: joint38
+    400072: joint39
+    400074: joint4
+    400076: joint40
+    400078: joint41
+    400080: joint42
+    400082: joint42 1
+    400084: joint43
+    400086: joint43 1
+    400088: joint44
+    400090: joint44 1
+    400092: joint45
+    400094: joint46
+    400096: joint46 1
+    400098: joint47
+    400100: joint47 1
+    400102: joint48
+    400104: joint48 1
+    400106: joint5
+    400108: joint6
+    400110: joint6 1
+    400112: joint66
+    400114: joint7
+    400116: joint7 1
+    400118: joint71
+    400120: joint77
+    400122: joint8
+    400124: joint9
+    400126: knee
+    400128: knee 1
+    400130: leg_L_CTRL
+    400132: leg_R_CTRL
+    400134: neck
+    400136: pelvis_CTRL
+    400138: root
+    400140: thight_L
+    400142: thight_L1
+    400144: toe
+    400146: toe 1
+    400148: Toe_IK
+    400150: Toe_IK 1
+    400152: wing_L
+    400154: wing_L_Ctrl
+    400156: wing_R
+    400158: wing_R_Ctrl
+    4300000: chickenBaseModel
+    4300002: chickenLegModel
+    4300004: chickenBeakModel
+    4300006: chickenWing_LModel
+    4300008: chickenWing_RModel
+    7400000: die
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: chickenBaseModel
+    13700002: chickenBeakModel
+    13700004: chickenLegModel
+    13700006: chickenWing_LModel
+    13700008: chickenWing_RModel
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: die
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 100
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: chickenBaseModel
+        weight: 1
+      - path: chickenBaseModel/chickenBeakModel
+        weight: 1
+      - path: chickenBaseModel/chickenLegModel
+        weight: 1
+      - path: chickenWing_LModel
+        weight: 1
+      - path: chickenWing_RModel
+        weight: 1
+      - path: global_CTRL
+        weight: 1
+      - path: global_CTRL/leg_L_CTRL
+        weight: 1
+      - path: global_CTRL/leg_R_CTRL
+        weight: 1
+      - path: global_CTRL/pelvis_CTRL
+        weight: 1
+      - path: global_CTRL/pelvis_CTRL/neck
+        weight: 1
+      - path: global_CTRL/pelvis_CTRL/neck/wing_L_Ctrl
+        weight: 1
+      - path: global_CTRL/pelvis_CTRL/neck/wing_R_Ctrl
+        weight: 1
+      - path: group_Toe_L
+        weight: 1
+      - path: group_Toe_L/group_Heal
+        weight: 1
+      - path: group_Toe_L/group_Heal/Ball_IK
+        weight: 1
+      - path: group_Toe_L/group_Heal/group_Ankle
+        weight: 1
+      - path: group_Toe_L/group_Heal/group_Ankle/Ankle_IK
+        weight: 1
+      - path: group_Toe_L/group_Heal/group_Toe
+        weight: 1
+      - path: group_Toe_L/group_Heal/group_Toe/Toe_IK
+        weight: 1
+      - path: group_Toe_R
+        weight: 1
+      - path: group_Toe_R/group_Heal 1
+        weight: 1
+      - path: group_Toe_R/group_Heal 1/Ball_IK 1
+        weight: 1
+      - path: group_Toe_R/group_Heal 1/group_Ankle 1
+        weight: 1
+      - path: group_Toe_R/group_Heal 1/group_Ankle 1/Ankle_IK 1
+        weight: 1
+      - path: group_Toe_R/group_Heal 1/group_Toe 1
+        weight: 1
+      - path: group_Toe_R/group_Heal 1/group_Toe 1/Toe_IK 1
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/joint2
+        weight: 1
+      - path: root/joint2/joint3
+        weight: 1
+      - path: root/joint2/joint3/joint4
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint5
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint5/joint6
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint5/joint6/joint7
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint5/joint6/joint11
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint5/joint12
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint77
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint77/joint6 1
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint77/joint6 1/joint7 1
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint77/joint6 1/joint11 1
+        weight: 1
+      - path: root/joint2/joint3/joint4/joint77/joint12 1
+        weight: 1
+      - path: root/joint2/joint41
+        weight: 1
+      - path: root/joint2/joint41/joint42
+        weight: 1
+      - path: root/joint2/joint41/joint42/joint43
+        weight: 1
+      - path: root/joint2/joint41/joint42/joint43/joint44
+        weight: 1
+      - path: root/joint2/joint71
+        weight: 1
+      - path: root/joint2/joint71/joint42 1
+        weight: 1
+      - path: root/joint2/joint71/joint42 1/joint43 1
+        weight: 1
+      - path: root/joint2/joint71/joint42 1/joint43 1/joint44 1
+        weight: 1
+      - path: root/joint8
+        weight: 1
+      - path: root/joint8/joint9
+        weight: 1
+      - path: root/joint8/joint9/joint10
+        weight: 1
+      - path: root/joint8/joint45
+        weight: 1
+      - path: root/joint8/joint45/joint46
+        weight: 1
+      - path: root/joint8/joint45/joint46/joint47
+        weight: 1
+      - path: root/joint8/joint45/joint46/joint47/joint48
+        weight: 1
+      - path: root/joint8/joint66
+        weight: 1
+      - path: root/joint8/joint66/joint46 1
+        weight: 1
+      - path: root/joint8/joint66/joint46 1/joint47 1
+        weight: 1
+      - path: root/joint8/joint66/joint46 1/joint47 1/joint48 1
+        weight: 1
+      - path: root/thight_L
+        weight: 1
+      - path: root/thight_L/knee
+        weight: 1
+      - path: root/thight_L/knee/ankle
+        weight: 1
+      - path: root/thight_L/knee/ankle/ball
+        weight: 1
+      - path: root/thight_L/knee/ankle/ball/toe
+        weight: 1
+      - path: root/thight_L1
+        weight: 1
+      - path: root/thight_L1/knee 1
+        weight: 1
+      - path: root/thight_L1/knee 1/ankle 1
+        weight: 1
+      - path: root/thight_L1/knee 1/ankle 1/ball 1
+        weight: 1
+      - path: root/thight_L1/knee 1/ankle 1/ball 1/toe 1
+        weight: 1
+      - path: wing_L
+        weight: 1
+      - path: wing_L/joint37
+        weight: 1
+      - path: wing_L/joint37/joint38
+        weight: 1
+      - path: wing_L/joint37/joint38/joint39
+        weight: 1
+      - path: wing_L/joint37/joint38/joint39/joint40
+        weight: 1
+      - path: wing_R
+        weight: 1
+      - path: wing_R/joint32
+        weight: 1
+      - path: wing_R/joint32/joint33
+        weight: 1
+      - path: wing_R/joint32/joint33/joint34
+        weight: 1
+      - path: wing_R/joint32/joint33/joint34/joint35
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -22,6 +22,9 @@ public class Hero : MonoBehaviour
     public Transform weaponeSlotHand;
     public Transform weaponeSlotBack;
 
+    //public int heroPosIndex;
+    //public int heroPosLayer;
+
     //public float TestVal;
 
     private void Awake()
@@ -211,6 +214,17 @@ public class Hero : MonoBehaviour
         _characterController.Move(moveDir * Time.deltaTime);
 
     }
+
+//	void OnTriggerStay(Collider other) 
+//	{
+//		other.GetComponent<MeshRenderer> ().enabled = true;
+//	}
+//
+//	void OnTriggerExit(Collider other)
+//	{
+//		other.GetComponent<MeshRenderer> ().enabled = false;
+//	}
+
 
     #region MoveController(float, float)
     private Vector3 MoveController(float v, float h)

@@ -16,35 +16,56 @@ public class CameraControlManager : MonoBehaviour
     public float fov;
     public float min;
     public float max;
+    public float zoomSnap;
 
     public bool isInit = false;
 
-    void Awake()
+	bool shake = false;
+
+    void Start()
     {
         isInit = false;
         thisCamera = GetComponent<Camera>();
         fov = thisCamera.fieldOfView = 50.0f;
 
-        this.transform.parent = player.transform;
-        this.transform.localPosition = new Vector3(0.0f, 6.0f, -3.5f);
-        this.transform.parent = null;
+		Transform p = this.transform.parent;
+
+//        this.transform.parent = player.transform;
+//        this.transform.localPosition = new Vector3(0.0f, 6.0f, -3.5f);
+//		this.transform.parent = p;
+		p.parent = player.transform;
+		p.localPosition = new Vector3(0.0f, 6.0f, -3.5f);
+		p.parent = null;
         initCameraPos = this.transform.position;
         initPlayerPos = player.transform.position;
+
+        min *= TileInfoManager.instance.viewAround * 0.1f;
+        max *= TileInfoManager.instance.viewAround * 0.1f;
+        zoomSnap *= TileInfoManager.instance.viewAround * 0.1f;
+        fov *= TileInfoManager.instance.viewAround * 0.1f;
         isInit = true;
     }
 
     void Update()
     {
+        if (!isInit)
+        {
+            return;
+        }
+
+            if (Input.GetKeyDown (KeyCode.P) && shake == false) {
+			StartCoroutine (ShakeIt ());
+		}
 
         if (PopUpManager.instance.listPopUp.Find(popup => popup.name == "PopUpTest") == null)
         {
             if (Input.GetAxis("Mouse ScrollWheel") < 0)
             {
-                fov += 5.0f;
+                fov += zoomSnap;
             }
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
-                fov -= 5.0f;
+                fov -= zoomSnap;
             }
 
             if (fov < min)
@@ -62,13 +83,31 @@ public class CameraControlManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (isInit)
+		if (isInit)
         {
             increment = player.transform.position - initPlayerPos;
-            this.transform.position = new Vector3(initCameraPos.x + increment.x
+			this.transform.parent.position = new Vector3(initCameraPos.x + increment.x
                 , initCameraPos.y + increment.y
                 , initCameraPos.z + increment.z);
         }
 
     }
+	IEnumerator ShakeIt()
+	{
+		float ttime = 0;
+		Vector3 pos = transform.localPosition;
+		shake = true;
+		while (true) {
+			ttime += Time.deltaTime;
+			if (ttime >= 1) 
+			{
+				transform.localPosition = pos;
+				shake = false;
+				yield break;
+			}
+			transform.localPosition = pos + transform.up * Random.Range (-0.1f, 0.1f) + transform.right * Random.Range (-0.1f, 0.1f);//new Vector3 (Random.Range (-0.1f, 0.1f),0, Random.Range (-0.1f, 0.1f));
+			yield return new WaitForEndOfFrame ();
+		}
+		yield return null;
+	}
 }

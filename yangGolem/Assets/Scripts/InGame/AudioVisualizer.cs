@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; 
+using UnityEngine;
 
 public class AudioVisualizer : MonoBehaviour
 {
@@ -19,6 +19,8 @@ public class AudioVisualizer : MonoBehaviour
     public float testFloat = 1.0f;
     public FFTWindow testFFT;
 
+    public Transform player;
+
     void Awake()
     {
         this.aSource = GetComponent<AudioSource>();
@@ -28,12 +30,13 @@ public class AudioVisualizer : MonoBehaviour
 
         GameObject tempCube;
 
-        for (int i = 0; i < samples.Length-1; i++)
+        for (int i = 0; i < samples.Length - 1; i++)
         {
             tempCube = Instantiate(cube);
             tempCube.transform.parent = this.transform;
-            tempCube.transform.localPosition = new Vector3(i * -(20.0f / 64.0f), 0.0f, 0.0f);
+            tempCube.transform.localPosition = new Vector3(i * -((TileInfoManager.instance.viewAround + 1) * 2 * TileInfoManager.instance.eachTileScale / 64.0f), 0.0f, 0.0f);
             tempCube.transform.eulerAngles = new Vector3(0.0f, -45.0f, 0.0f);
+            tempCube.transform.localScale = tempCube.transform.localScale * TileInfoManager.instance.viewAround * 0.1f;
 
             cubesTransform[i] = tempCube.GetComponent<Transform>();
         }
@@ -42,8 +45,9 @@ public class AudioVisualizer : MonoBehaviour
         {
             tempCube = Instantiate(cube2);
             tempCube.transform.parent = this.transform;
-            tempCube.transform.localPosition = new Vector3(0.0f, 0.0f, i * -(20.0f / 64.0f));
+            tempCube.transform.localPosition = new Vector3(0.0f, 0.0f, i * -((TileInfoManager.instance.viewAround + 1) * 2 * TileInfoManager.instance.eachTileScale / 64.0f));
             tempCube.transform.eulerAngles = new Vector3(0.0f, -45.0f, 0.0f);
+            tempCube.transform.localScale = tempCube.transform.localScale * TileInfoManager.instance.viewAround * 0.1f;
 
             cubesTransform2[i] = tempCube.GetComponent<Transform>();
         }
@@ -52,17 +56,19 @@ public class AudioVisualizer : MonoBehaviour
 
     IEnumerator Start()
     {
-        while(aSource == null)
+        while (aSource == null)
         {
             yield return null;
         }
+
+        //타일큐브 모두배치되었는지 보고. -> 플래그 하나 만들어 놓기.
 
         StartCoroutine("StartCubeAction");
     }
 
     IEnumerator StartCubeAction()
     {
-        while(true)
+        while (true)
         {
             aSource.GetSpectrumData(this.samples, 0, testFFT);
 
@@ -104,7 +110,14 @@ public class AudioVisualizer : MonoBehaviour
 
     void Update()
     {
+        transform.localPosition = new Vector3(player.localPosition.x + (TileInfoManager.instance.viewAround + 1) * TileInfoManager.instance.eachTileScale
+            , player.localPosition.y
+            , player.localPosition.z + (TileInfoManager.instance.viewAround + 1) * TileInfoManager.instance.eachTileScale);
 
+        //Vector3 _cube = player.GetComponent<Player>().curCubeOnPlayer.transform.localPosition;
+        //transform.localPosition = new Vector3(_cube.x + (TileInfoManager.instance.viewAround + 1) * TileInfoManager.instance.eachTileScale
+        //    , player.localPosition.y
+        //    , _cube.z + (TileInfoManager.instance.viewAround + 1) * TileInfoManager.instance.eachTileScale);
 
     }
 }

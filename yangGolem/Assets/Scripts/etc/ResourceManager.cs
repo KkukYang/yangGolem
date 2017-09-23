@@ -24,10 +24,7 @@ public class ResourceManager : MonoBehaviour {
 		}
 	}
 	
-	public Dictionary<string, GameObject> hero = new Dictionary<string, GameObject>();		
-	//public Dictionary<string, GameObject> bullet = new Dictionary<string, GameObject>();
-	public Dictionary<string, GameObject> enemy = new Dictionary<string, GameObject>();
-	public Dictionary<string, GameObject> skill = new Dictionary<string, GameObject>();
+	public Dictionary<string, GameObject> monster = new Dictionary<string, GameObject>();
 	public Dictionary<string, GameObject> effect = new Dictionary<string, GameObject>();
 	public Dictionary<string, GameObject> item = new Dictionary<string, GameObject>();
 	public Dictionary<string, GameObject> popup = new Dictionary<string, GameObject>();
@@ -37,46 +34,37 @@ public class ResourceManager : MonoBehaviour {
     public Queue<GameObject> scoreTextQueue = new Queue<GameObject>();
     public Queue<GameObject> damageTextQueue = new Queue<GameObject>();
 
-    GameObject itemBox;		// 아이템들을 자식으로갖는 오브젝트.
-	public Dictionary<string, Queue<GameObject>> itemDic = new Dictionary<string, Queue<GameObject>>();				// 아이템 오브젝트를 재활용하기위해 저장하는 딕셔너리.
+    [HideInInspector]
+    public GameObject itemBox;		// 아이템들을 자식으로갖는 오브젝트.
+	//public Dictionary<string, Queue<GameObject>> itemDic = new Dictionary<string, Queue<GameObject>>();				// 아이템 오브젝트를 재활용하기위해 저장하는 딕셔너리.
 	
 	GameObject effectBox;
 	public Dictionary<string, Queue<GameObject>> effectDic = new Dictionary<string, Queue<GameObject>>();
 
-    //public Dictionary<string, Queue<GameObject>> bulletDic = new Dictionary<string, Queue<GameObject>>();
-    //public Dictionary<string, Queue<GameObject>> bulletSampleDic = new Dictionary<string, Queue<GameObject>>();
-    //public Dictionary<string, Queue<GameObject>> enemyBulletDic = new Dictionary<string, Queue<GameObject>>();	// 적 기체의 발사체들을 재활용하기위해 쌓는 딕셔너리.
+    [HideInInspector]
+    public GameObject cubeBox;
+    [HideInInspector]
+    public GameObject fieldObjectBox;
+    [HideInInspector]
+    public GameObject monsterBox;
 
-	void Awake()
+    void Awake()
 	{
 		DontDestroyOnLoad(this.gameObject);
 
 		itemBox = transform.Find("ItemBox").gameObject;
 		effectBox = transform.Find("EffectBox").gameObject;
+        cubeBox = transform.Find("CubeBox").gameObject;
+        fieldObjectBox = transform.Find("FieldObjectBox").gameObject;
+        monsterBox = transform.Find("MonsterBox").gameObject;
 
-		// 영웅 셋팅.
-		object[] heroObj = Resources.LoadAll("Prefabs/Hero");
-		for(int i = 0; i < heroObj.Length; i++)
+        // 적 셋팅.
+        object[] monsterObj = Resources.LoadAll("Prefabs/Monster");
+		for(int i = 0; i < monsterObj.Length; i++)
 		{
-			GameObject obj = heroObj[i] as GameObject;
-			hero.Add(obj.name, obj);
-		}
-
-		// 적 셋팅.
-		object[] enemyObj = Resources.LoadAll("Prefabs/Enemy");
-		for(int i = 0; i < enemyObj.Length; i++)
-		{
-			GameObject obj = enemyObj[i] as GameObject;
+			GameObject obj = monsterObj[i] as GameObject;
             obj.SetActive(false);
-            enemy.Add(obj.name, obj);
-		}
-		
-		// 스킬 셋팅.
-		object[] skillObj = Resources.LoadAll("Prefabs/Skill");
-		for(int i = 0; i < skillObj.Length; i++)
-		{
-			GameObject obj = skillObj[i] as GameObject;
-			skill.Add(obj.name, obj);
+            monster.Add(obj.name, obj);
 		}
 		
 		// 이펙트 셋팅.
@@ -115,7 +103,6 @@ public class ResourceManager : MonoBehaviour {
             floorTile.Add(obj.name, obj);
         }
 
-
         // 팝업 셋팅.
         object[] PopUpObj = Resources.LoadAll("Prefabs/PopUp");
 		for(int i = 0; i < PopUpObj.Length; i++)
@@ -123,7 +110,10 @@ public class ResourceManager : MonoBehaviour {
 			GameObject obj = PopUpObj[i] as GameObject;
 			popup.Add(obj.name, obj);
 		}
-	}
+
+        Resources.UnloadUnusedAssets();
+
+    }
 
     public GameObject GetPopUp(string name)
     {
@@ -218,8 +208,7 @@ public class ResourceManager : MonoBehaviour {
     public void DisableAllObj()
     {
         // 리소스, 가비지콜렉터 정리.
-        //System.GC.Collect();
-        //Resources.UnloadUnusedAssets();
+        System.GC.Collect();
 
         //InGame Active off.
         if (SceneManager.GetActiveScene().name == "Ingame")
@@ -235,12 +224,8 @@ public class ResourceManager : MonoBehaviour {
             }
         }
 
-        //ObjectPool Clear
-        itemDic.Clear();
+        //itemDic.Clear();
         effectDic.Clear();
-        //bulletDic.Clear();
-        //bulletSampleDic.Clear();
-        //enemyBulletDic.Clear();
         scoreTextQueue.Clear();
         damageTextQueue.Clear();
 
@@ -266,13 +251,5 @@ public class ResourceManager : MonoBehaviour {
         }
 
     }
-
-    //public void SetLayerChange(GameObject _obj, string _layerName)
-    //{
-    //    foreach(Transform tm in _obj.transform)
-    //    {
-    //        tm.lay
-    //    }
-    //}
 
 }

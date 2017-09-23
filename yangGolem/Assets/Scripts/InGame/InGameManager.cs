@@ -19,6 +19,7 @@ public class InGameManager : MonoBehaviour
     //public UIButton testButton;
     //public GameObject selectedObjectToPlace;
     public AudioVisualizer audioVisualizer;
+    public GameObject miniMap;
 
     private void Awake()
     {
@@ -40,6 +41,17 @@ public class InGameManager : MonoBehaviour
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            //미니맵 생성.(켜고 끄기.)
+            if(miniMap.activeSelf)
+            {
+                miniMap.SetActive(false);
+            }
+            else
+            {
+                miniMap.SetActive(true);
+            }
+        }
     }
 }

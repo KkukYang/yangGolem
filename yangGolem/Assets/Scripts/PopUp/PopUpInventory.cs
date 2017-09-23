@@ -18,22 +18,54 @@ public class PopUpInventory : MonoBehaviour
 
     private void OnEnable()
     {
-        listInvenSlot.Clear();
-        string[] arrStrItemName = new string[3] { "sword_1", "sword_2", "sword_3" };
-        int idx = 0;
-
-        foreach(Transform tm in itemSlotGroup.transform)
+        foreach (Transform tm in itemSlotGroup.transform)
         {
-            tm.GetComponent<InventoryItemSlot>().popupName = this.transform.name;
-            tm.GetComponent<InventoryItemSlot>().itemName = (idx < arrStrItemName.Length) ? arrStrItemName[idx] : "";
-            tm.GetComponent<InventoryItemSlot>().UpdateItemInfo();
-            listInvenSlot.Add(tm.GetComponent<InventoryItemSlot>());
-            idx++;
+            tm.Find("Image").gameObject.SetActive(false);
+            tm.Find("Label").gameObject.SetActive(false);
         }
 
+
         PopUpManager.instance.StartPopUp(this.gameObject);
+
+        Invoke("SetPopUpInit", 0.1f);
     }
 
+
+    public void SetPopUpInit()
+    {
+        foreach(Transform tm in itemSlotGroup.transform)
+        {
+            tm.Find("Image").gameObject.SetActive(false);
+            tm.Find("Label").gameObject.SetActive(false);
+        }
+
+        listInvenSlot.Clear();
+
+        int idx = 0;
+
+        foreach (var item in GameInfoManager.instance.playerInventory.dicPlayerInventory)
+        {
+            if (item.Value <= 0)
+            {
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = "";
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = 0;
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().UpdateItemInfo();
+                listInvenSlot.Add(itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
+            }
+            else
+            {
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = item.Key;
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = item.Value;
+                listInvenSlot.Add(itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
+                idx++;
+            }
+        }
+
+        foreach (var slot in listInvenSlot)
+        {
+            slot.UpdateItemInfo();
+        }
+    }
 
     void ExitButtonEvent()
     {

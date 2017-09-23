@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class InventoryItemSlot : MonoBehaviour
 {
-    public string popupName;
+    //public string popupName;
     public string itemName;
+    public int itemCnt;
     UISprite itemImage;
+    UILabel itemCntLabel;
     public GameObject cursor = null;
 
+    PopUpInventory popUpInventory = null;
+    GeographyCube curCubePicked = new GeographyCube();
+
+    public bool isItemDrop = false;
 
     private void Awake()
     {
-        itemImage = this.transform.Find("Image").GetComponent<UISprite>();    
+        itemImage = this.transform.Find("Image").GetComponent<UISprite>();
+        itemCntLabel = this.transform.Find("Label").GetComponent<UILabel>();
+        popUpInventory = this.transform.parent.parent.parent.GetComponent<PopUpInventory>();
     }
 
 
@@ -33,20 +41,40 @@ public class InventoryItemSlot : MonoBehaviour
 
         if(_flag)
         {
-            if(UIManager.instance.tempObj.transform.Find("ItemCursor") != null)
+            //옮기는것.
+            if(Input.GetMouseButtonDown(0))
             {
-                cursor = UIManager.instance.tempObj.transform.Find("ItemCursor").gameObject;
-            }
-            else
-            {
-                cursor = Instantiate(Resources.Load("Prefabs/ItemCursor")) as GameObject;
+                Debug.Log("GetMouseButtonDown(0)");
+                if (UIManager.instance.tempObj.transform.Find("ItemCursor") != null)
+                {
+                    cursor = UIManager.instance.tempObj.transform.Find("ItemCursor").gameObject;
+                }
+                else
+                {
+                    cursor = Instantiate(Resources.Load("Prefabs/ItemCursor")) as GameObject;
+                }
+
+                cursor.GetComponent<ItemCursor>().SetUpdateImage(itemName);
+                cursor.name = "ItemCursor";
+                cursor.transform.parent = UIManager.instance.tempObj.transform;
+                cursor.transform.localScale = Vector3.one;
+                cursor.SetActive(true);
+
+                isItemDrop = true;
             }
 
-            cursor.GetComponent<ItemCursor>().SetUpdateImage(itemName);
-            cursor.name = "ItemCursor";
-            cursor.transform.parent = UIManager.instance.tempObj.transform;
-            cursor.transform.localScale = Vector3.one;
-            cursor.SetActive(true);
+            //사용 먹는것.
+            if (Input.GetMouseButtonDown(1))
+            {
+                Debug.Log("GetMouseButtonDown(1)");
+
+                if(GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemName))
+                {
+                    GameInfoManager.instance.playerInventory.dicPlayerInventory[itemName]--;
+                }
+
+                popUpInventory.SetPopUpInit();
+            }
         }
     }
 
@@ -54,6 +82,41 @@ public class InventoryItemSlot : MonoBehaviour
     {
         Debug.Log("OnDragEnd()");
         UIManager.instance.tempObj.transform.Find("ItemCursor").gameObject.SetActive(false);
+        Invoke("IsResultItemDrop", 0.1f);
+    }
+
+    void IsResultItemDrop()
+    {
+        if(isItemDrop)
+        {
+            //템 떨구기. 일단 하나 깎고.
+            if (GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemName))
+            {
+                GameInfoManager.instance.playerInventory.dicPlayerInventory[itemName]--;
+            }
+
+
+            GameObject _obj = null;
+            if (ResourceManager.instance.itemBox.transform.Find(itemName) != null)
+            {
+                _obj = ResourceManager.instance.itemBox.transform.Find(itemName).gameObject;
+            }
+            else
+            {
+                _obj = Instantiate(ResourceManager.instance.item[itemName] as GameObject) as GameObject;
+            }
+
+            _obj.name = itemName;
+            _obj.transform.parent = GameObject.FindWithTag("MainStage").transform.Find("FloorTileGroup").transform;
+            _obj.transform.position = new Vector3(curCubePicked.transform.position.x
+                        , curCubePicked.transform.Find("InvisibleCube").GetComponent<BoxCollider>().bounds.max.y
+                        , curCubePicked.transform.position.z);
+            _obj.SetActive(true);
+
+            isItemDrop = false;
+
+            popUpInventory.SetPopUpInit();
+        }
     }
 
     public void OnDrop(GameObject _obj)
@@ -61,16 +124,18 @@ public class InventoryItemSlot : MonoBehaviour
         Debug.Log("InventoryItemSlot OnDrop" + _obj.GetComponent<InventoryItemSlot>().itemName);
 
         itemName = _obj.GetComponent<InventoryItemSlot>().itemName;
+        itemCnt = _obj.GetComponent<InventoryItemSlot>().itemCnt;
         UpdateItemInfo();
 
         if (_obj != this.gameObject)
         {
             _obj.GetComponent<InventoryItemSlot>().itemName = "";
+            _obj.GetComponent<InventoryItemSlot>().itemCnt = 0;
             _obj.GetComponent<InventoryItemSlot>().UpdateItemInfo();
-
         }
 
         _obj.GetComponent<InventoryItemSlot>().cursor.SetActive(false);
+        isItemDrop = false;
 
     }
 
@@ -82,21 +147,48 @@ public class InventoryItemSlot : MonoBehaviour
             itemImage = this.transform.Find("Image").GetComponent<UISprite>();
         }
 
-        itemImage.spriteName = itemName;
+        if (itemCntLabel == null)
+        {
+            itemCntLabel = this.transform.Find("Label").GetComponent<UILabel>();
+        }
+
 
         if (itemName == "")
         {
             itemImage.enabled = false;
+            itemCntLabel.enabled = false;
+            itemImage.gameObject.SetActive(false);
+            itemCntLabel.gameObject.SetActive(false);
         }
         else
         {
             itemImage.enabled = true;
+            itemCntLabel.enabled = true;
+            itemImage.gameObject.SetActive(true);
+            itemCntLabel.gameObject.SetActive(true);
         }
 
-        itemImage.gameObject.SetActive(true);
+        itemImage.spriteName = itemName;
+        itemCntLabel.text = itemCnt.ToString();
+
     }
 
     void Update()
+    {
+        if(isItemDrop)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            int mask = 1 << LayerMask.NameToLayer("Cube");
+
+            if (Physics.Raycast(ray, out hit, 100.0f, mask))
+            {
+                curCubePicked = hit.transform.parent.GetComponent<GeographyCube>();
+            }
+        }
+    }
+
+    private void LateUpdate()
     {
 
     }
