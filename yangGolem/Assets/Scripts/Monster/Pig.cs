@@ -151,12 +151,14 @@ public class Pig : MonsterBehaviour
             }
         }
     }
-    void OnTriggerEnter(Collider coll)
-    {
-        if (coll.CompareTag("Sword"))
-        {
-            --hp; //hp -= Player.instance.ATK;
-            monsterState = MONSTERSTATE.Damage;
-        }
-    }
+
+    ////AttackJude에서 처리합니다.
+    //void OnTriggerEnter(Collider coll)
+    //{
+    //    if (coll.CompareTag("Sword"))
+    //    {
+    //        --hp; //hp -= Player.instance.ATK;
+    //        monsterState = MONSTERSTATE.Damage;
+    //    }
+    //}
 }

@@ -31,6 +31,7 @@ public class TileInfoManager : MonoBehaviour
     public List<FieldObject> listFieldObject = new List<FieldObject>();
     public GameObject curSelectCube = null;
     public GameObject floorTileGroup;
+    public GameObject fieldObjectGroup;
     public GameObject monsterGroup;
 
 
@@ -155,128 +156,6 @@ public class TileInfoManager : MonoBehaviour
         }
     }
 
-
-    //void SetGeographyAndFieldObject() //기존에는 모두 깔았는데 이번엔 히어로 좌표 기준으로 범위만큼 깔아둔다.
-    //{
-
-    //    for (int y = (stageInfo.heroPos / col) - viewAround; y < (stageInfo.heroPos / col) + viewAround + 1; y++)
-    //    //for (int y = 0; y < row; y++)
-    //    {
-    //        for (int x = (stageInfo.heroPos % col) - viewAround; x < (stageInfo.heroPos % col) + viewAround + 1; x++)
-    //        //for (int x = 0; x < col; x++)
-    //        {
-    //            if (y < 0 || x < 0 || y > row - 1 || x > col - 1)
-    //            {
-    //                continue;
-    //            }
-
-    //            if ((from _cube in listGeoCube
-    //                 where _cube.positionID == (y * col) + x
-    //                 select _cube).ToList().Count > 0)
-    //            {
-    //                continue;
-    //            }
-
-    //            int _layer = 0; //층
-    //            Color32 tempPixelColor32 = textureMap.GetPixel(x, y);
-
-    //            for (int idx = 0; idx < (26 - (int)tempPixelColor32.a / 10); idx++)
-    //            {
-    //                int _type = (int)tempPixelColor32.r;
-    //                bool _isExistOnCube = ((26 - (int)tempPixelColor32.a / 10) - 1 == idx) ? false : true;
-
-    //                if(_isExistOnCube)
-    //                {
-    //                    _layer++;
-    //                    continue;
-    //                }
-
-    //                switch (_type)
-    //                {
-    //                    case (int)EnumCubeType.StartArea:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.StartArea, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.RankGrass:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.RankGrass, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.HalfGrass:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.HalfGrass, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.Grass:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.Grass, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.GrassSand:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.GrassSand, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.Sand:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.Sand, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.Water:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.Water, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.SlopeLeft:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.SlopeLeft, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case (int)EnumCubeType.SlopeRight:
-    //                        {
-    //                            SetTileOnLand(floorTileGroup, x, y, _layer, EnumCubeType.SlopeRight, _isExistOnCube);
-    //                        }
-    //                        break;
-    //                    case 255:
-    //                        break;
-    //                    default:
-    //                        {
-    //                            //Debug.Log("GeographyCube Execption!! : " + _type + ", " + x + ", " + y);
-    //                        }
-    //                        break;
-    //                }
-
-    //                _type = (int)tempPixelColor32.g;
-
-    //                switch(_type)
-    //                {
-    //                    case (int)EnumFieldObject.NULL:
-    //                        break;
-    //                    case (int)EnumFieldObject.Rock:
-    //                        {
-    //                            SetFieldOnLand(floorTileGroup, x, y, _layer+1, EnumFieldObject.Rock);
-    //                        }
-    //                        break;
-    //                    case (int)EnumFieldObject.Tree:
-    //                        {
-    //                            SetFieldOnLand(floorTileGroup, x, y, _layer+1, EnumFieldObject.Tree);
-    //                        }
-    //                        break;
-    //                    case 255:
-    //                        break;
-    //                    default:
-    //                        {
-    //                            //Debug.Log("FieldObject Execption!! : " + _type + ", " + x + ", " + y);
-    //                        }
-    //                        break;
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //}
-
     void SetGeographyAndFieldObject() //기존에는 모두 깔았는데 이번엔 히어로 좌표 기준으로 범위만큼 깔아둔다.
     {
 
@@ -366,12 +245,12 @@ public class TileInfoManager : MonoBehaviour
                                         break;
                                     case (int)EnumFieldObject.Rock:
                                         {
-                                            SetFieldOnLand(floorTileGroup, x, y, _layer, EnumFieldObject.Rock);
+                                            SetFieldOnLand(fieldObjectGroup, x, y, _layer, EnumFieldObject.Rock);
                                         }
                                         break;
                                     case (int)EnumFieldObject.Tree:
                                         {
-                                            SetFieldOnLand(floorTileGroup, x, y, _layer, EnumFieldObject.Tree);
+                                            SetFieldOnLand(fieldObjectGroup, x, y, _layer, EnumFieldObject.Tree);
                                         }
                                         break;
                                     case 25:
@@ -430,7 +309,7 @@ public class TileInfoManager : MonoBehaviour
 		if (_isExistOnCube) {
 			_obj.transform.localScale = Vector3.one * eachTileScale;
 		} else {
-			_obj.transform.localScale = new Vector3(eachTileScale, Random.Range(0.9f, 1.0f) * eachTileScale, eachTileScale);
+			_obj.transform.localScale = new Vector3(eachTileScale, Random.Range(0.8f, 1.0f) * eachTileScale, eachTileScale);
         }
 
         _obj.transform.localPosition = new Vector3(_x * eachTileScale - (0.5f * 0.5f) * (row - 1)
@@ -447,7 +326,7 @@ public class TileInfoManager : MonoBehaviour
 
         _obj.SetActive(true);
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
 
         //몬스터 스폰. 이미 등록되어 있는 얘들을 뿌린다. 먼저 해당 타일에 있는지 판단하자.
         MonsterInfo monsterInfo = null;
@@ -602,26 +481,6 @@ public class TileInfoManager : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    if (isRenderCube)
-        //    {
-        //        foreach (var cube in listGeoCube)
-        //        {
-        //            cube.transform.Find("Cube").GetComponent<MeshRenderer>().enabled = false;
-        //        }
-        //        isRenderCube = false;
-        //    }
-        //    else
-        //    {
-        //        foreach (var cube in listGeoCube)
-        //        {
-        //            cube.transform.Find("Cube").GetComponent<MeshRenderer>().enabled = true;
-        //        }
-        //        isRenderCube = true;
-        //    }
-        //}
-
         ////나중에 UI팝업으로 뺄것.
         if (Input.GetKeyDown(KeyCode.Z) && curSelectCube == null) //예를들어 Normal
         {
@@ -732,13 +591,13 @@ public class TileInfoManager : MonoBehaviour
                             //&& curSelectCube.GetComponent<GeographyCube>().cubeType != EnumCubeType.SlopeRight
                             )
                         {
-                            if (curSelectCube.transform.Find("Cube").GetComponent<BoxCollider>() != null)
+                            if (curSelectCube.transform.Find("InvisibleCube/Cube").GetComponent<BoxCollider>() != null)
                             {
-                                curSelectCube.transform.Find("Cube").GetComponent<BoxCollider>().enabled = true;
+                                curSelectCube.transform.Find("InvisibleCube/Cube").GetComponent<BoxCollider>().enabled = true;
                             }
-                            else if (curSelectCube.transform.Find("Cube").GetComponent<MeshCollider>() != null)
+                            else if (curSelectCube.transform.Find("InvisibleCube/Cube").GetComponent<MeshCollider>() != null)
                             {
-                                curSelectCube.transform.Find("Cube").GetComponent<MeshCollider>().enabled = true;
+                                curSelectCube.transform.Find("InvisibleCube/Cube").GetComponent<MeshCollider>().enabled = true;
                             }
                         }
 
@@ -989,19 +848,6 @@ public enum EnumCubeType
     SlopeDown,
 }
 
-//public enum EnumCubeType
-//{
-//    NULL = 0,
-//    Sand,
-//    Grass,
-//    Soil,
-//    Water,
-//    SlopeRight,
-//    SlopeLeft,
-//    SlopeUp,
-//    SlopeDown,
-//}
-
 public class StageInfo //저장용.
 {
     public List<int>[] arrListCubeInStage { get; set; } //플레이어가 조작한 것은 여기다 저장.
@@ -1009,32 +855,3 @@ public class StageInfo //저장용.
     public int heroLayer { get; set; }
 }
 
-public class MonsterSpawnInfo
-{
-    public int id; // 타일ID
-    public Dictionary<int, string[]> dicMonsterGenRate = new Dictionary<int, string[]>(); //string[] ID, %
-    //public string[] gen1;//ID, %
-    //public string[] gen2;
-    //public string[] gen3;
-
-    public MonsterSpawnInfo(string _id, string _gen1, string _gen2, string _gen3)
-    {
-        id = int.Parse(_id);
-
-        if (_gen1.Split('/').Length > 1)
-        {
-            dicMonsterGenRate.Add(1, _gen1.Split('/'));
-        }
-
-        if (_gen2.Split('/').Length > 1)
-        {
-            dicMonsterGenRate.Add(2, _gen2.Split('/'));
-        }
-
-        if (_gen3.Split('/').Length > 1)
-        {
-            dicMonsterGenRate.Add(3, _gen3.Split('/'));
-        }
-    }
-
-}

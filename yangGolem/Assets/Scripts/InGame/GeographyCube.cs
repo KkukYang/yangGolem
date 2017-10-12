@@ -38,10 +38,10 @@ public class GeographyCube : MonoBehaviour
             isEnableBuild = true;
         }
 
-        cube = transform.Find("Cube").gameObject;
-        grid = transform.Find("Grid").gameObject;
-        upper = transform.Find("Upper").gameObject;
-		invisibleCube = transform.Find("InvisibleCube").gameObject;
+        invisibleCube = this.transform.Find("InvisibleCube").gameObject;
+        grid = this.transform.Find("Grid").gameObject;
+        upper = invisibleCube.transform.Find("Upper").gameObject;
+        cube = invisibleCube.transform.Find("Cube").gameObject;
     }
 
     void Start()

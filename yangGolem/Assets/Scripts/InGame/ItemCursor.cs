@@ -10,14 +10,14 @@ public class ItemCursor : MonoBehaviour
 
     }
 
-    public void SetUpdateImage(string _name)
+    public void SetUpdateImage(string _id)
     {
-        if(_name == "")
+        if(_id == "")
         {
             return;
         }
 
-        GetComponent<UISprite>().spriteName = _name;
+        GetComponent<UISprite>().spriteName = _id;
         GetComponent<UISprite>().enabled = true;
     }
 

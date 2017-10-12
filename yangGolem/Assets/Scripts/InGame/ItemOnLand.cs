@@ -49,29 +49,29 @@ public class ItemOnLand : MonoBehaviour
             //먹어지는거.
             if (Input.GetKeyDown(KeyCode.F))
             {
-                if(GameInfoManager.instance.playerInventory.dicPlayerInventory == null)
-                {
-                    GameInfoManager.instance.playerInventory.dicPlayerInventory = new Dictionary<string, int>();
-                }
+                //if(GameInfoManager.instance.playerInventory.dicPlayerInventory == null)
+                //{
+                //    GameInfoManager.instance.playerInventory.dicPlayerInventory = new Dictionary<int, int>();
+                //}
 
-                if(GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(this.name))
-                {
-                    GameInfoManager.instance.playerInventory.dicPlayerInventory[this.name]++;
-                }
-                else
-                {
-                    GameInfoManager.instance.playerInventory.dicPlayerInventory.Add(this.name, 1);
-                }
+                //if(GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(this.name))
+                //{
+                //    GameInfoManager.instance.playerInventory.dicPlayerInventory[this.name]++;
+                //}
+                //else
+                //{
+                //    GameInfoManager.instance.playerInventory.dicPlayerInventory.Add(this.name, 1);
+                //}
 
-                this.transform.parent = ResourceManager.instance.itemBox.transform;
-                this.gameObject.SetActive(false);
+                //this.transform.parent = ResourceManager.instance.itemBox.transform;
+                //this.gameObject.SetActive(false);
 
-                if(PopUpManager.instance.listPopUp.Find(obj => obj.name == "PopUpInventory") != null)
-                {
-                    PopUpInventory popup = PopUpManager.instance.listPopUp.Find(obj => obj.name == "PopUpInventory").GetComponent<PopUpInventory>();
+                //if(PopUpManager.instance.listPopUp.Find(obj => obj.name == "PopUpInventory") != null)
+                //{
+                //    PopUpInventory popup = PopUpManager.instance.listPopUp.Find(obj => obj.name == "PopUpInventory").GetComponent<PopUpInventory>();
 
-                    popup.SetPopUpInit();
-                }
+                //    popup.SetPopUpInit();
+                //}
             }
         }
     }

@@ -7,6 +7,8 @@ public class InventoryItemSlot : MonoBehaviour
     //public string popupName;
     public string itemName;
     public int itemCnt;
+    public int itemID;
+
     UISprite itemImage;
     UILabel itemCntLabel;
     public GameObject cursor = null;
@@ -54,7 +56,7 @@ public class InventoryItemSlot : MonoBehaviour
                     cursor = Instantiate(Resources.Load("Prefabs/ItemCursor")) as GameObject;
                 }
 
-                cursor.GetComponent<ItemCursor>().SetUpdateImage(itemName);
+                cursor.GetComponent<ItemCursor>().SetUpdateImage(itemID.ToString());
                 cursor.name = "ItemCursor";
                 cursor.transform.parent = UIManager.instance.tempObj.transform;
                 cursor.transform.localScale = Vector3.one;
@@ -68,9 +70,9 @@ public class InventoryItemSlot : MonoBehaviour
             {
                 Debug.Log("GetMouseButtonDown(1)");
 
-                if(GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemName))
+                if(GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemID))
                 {
-                    GameInfoManager.instance.playerInventory.dicPlayerInventory[itemName]--;
+                    GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
                 }
 
                 popUpInventory.SetPopUpInit();
@@ -90,9 +92,9 @@ public class InventoryItemSlot : MonoBehaviour
         if(isItemDrop)
         {
             //템 떨구기. 일단 하나 깎고.
-            if (GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemName))
+            if (GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemID))
             {
-                GameInfoManager.instance.playerInventory.dicPlayerInventory[itemName]--;
+                GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
             }
 
 
@@ -125,12 +127,16 @@ public class InventoryItemSlot : MonoBehaviour
 
         itemName = _obj.GetComponent<InventoryItemSlot>().itemName;
         itemCnt = _obj.GetComponent<InventoryItemSlot>().itemCnt;
+        itemID = _obj.GetComponent<InventoryItemSlot>().itemID;
+
         UpdateItemInfo();
 
         if (_obj != this.gameObject)
         {
             _obj.GetComponent<InventoryItemSlot>().itemName = "";
             _obj.GetComponent<InventoryItemSlot>().itemCnt = 0;
+            _obj.GetComponent<InventoryItemSlot>().itemID = 0;
+
             _obj.GetComponent<InventoryItemSlot>().UpdateItemInfo();
         }
 
@@ -168,7 +174,7 @@ public class InventoryItemSlot : MonoBehaviour
             itemCntLabel.gameObject.SetActive(true);
         }
 
-        itemImage.spriteName = itemName;
+        itemImage.spriteName = itemID.ToString();
         itemCntLabel.text = itemCnt.ToString();
 
     }

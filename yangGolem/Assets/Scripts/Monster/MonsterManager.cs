@@ -29,7 +29,6 @@ public class MonsterManager : MonoBehaviour
 
     public MonsterInfoInStage monsterInfoInStage = null;
     public float monsterSpawnRate = 10.0f;
-    public Dictionary<int, MonsterSpawnInfo> dicMonsterSpawnInfoEachTile = new Dictionary<int, MonsterSpawnInfo>(); //파싱해놓은 참고데이터.
     public int[] arrMonsterCnt;
 
     public List<MonsterBehaviour> listMonster = new List<MonsterBehaviour>(); //보이는 몬스터 관리
@@ -37,32 +36,13 @@ public class MonsterManager : MonoBehaviour
     //MonsterManager는 독립적으로 가상의 몬스터를 갖고 있어야 함.
     private void Awake()
     {
-        MonsterSpawnInfoEachTileParseFromJson();
 
-        InitializeMonsterInfo();
     }
 
 
     void Start()
     {
-
-    }
-
-
-    void MonsterSpawnInfoEachTileParseFromJson()
-    {
-        TextAsset textAsset = (TextAsset)Resources.Load("_JSONs/MonsterSpawnInfo");
-        JsonData array = JsonMapper.ToObject(textAsset.text);
-
-        for (int i = 0; i < array.Count; i++)
-        {
-            MonsterSpawnInfo monsterSpawnInfo = new MonsterSpawnInfo(array[i]["id"].ToString()
-                                                                    , array[i]["gen1"].ToString()
-                                                                    , array[i]["gen2"].ToString()
-                                                                    , array[i]["gen3"].ToString());
-
-            dicMonsterSpawnInfoEachTile.Add(int.Parse(array[i]["id"].ToString()), monsterSpawnInfo);
-        }
+        InitializeMonsterInfo();
     }
 
 
@@ -118,13 +98,13 @@ public class MonsterManager : MonoBehaviour
         int tempRate = 0;
         int monsterID = 0;
 
-        if (!dicMonsterSpawnInfoEachTile.ContainsKey(_type))
+        if (!GameInfoManager.instance.dicMonsterSpawnInfoEachTile.ContainsKey(_type))
         {
             Debug.Log("not exist Tile In MonsterSpawn(int _type) : " + _type);
             return;
         }
 
-        foreach (KeyValuePair<int, string[]> rateKeyValue in dicMonsterSpawnInfoEachTile[(int)_type].dicMonsterGenRate)
+        foreach (KeyValuePair<int, string[]> rateKeyValue in GameInfoManager.instance.dicMonsterSpawnInfoEachTile[(int)_type].dicMonsterGenRate)
         {
             totalRate += int.Parse(rateKeyValue.Value[1]);
         }
@@ -132,7 +112,7 @@ public class MonsterManager : MonoBehaviour
         randomVal = Random.Range(0, totalRate + 1);
 
         //확률에 적용.
-        foreach (KeyValuePair<int, string[]> rateKeyValue in dicMonsterSpawnInfoEachTile[(int)_type].dicMonsterGenRate)
+        foreach (KeyValuePair<int, string[]> rateKeyValue in GameInfoManager.instance.dicMonsterSpawnInfoEachTile[(int)_type].dicMonsterGenRate)
         {
             tempRate += int.Parse(rateKeyValue.Value[1]);
 
@@ -314,9 +294,6 @@ public class MonsterManager : MonoBehaviour
         GameInfoManager.instance.WriteStringToFile(jsonText, "monsterInfo");
     }
 }
-
-
-
 
 
 public enum MONSTERTYPE

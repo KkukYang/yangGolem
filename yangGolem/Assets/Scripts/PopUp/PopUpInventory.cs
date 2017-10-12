@@ -45,17 +45,26 @@ public class PopUpInventory : MonoBehaviour
 
         foreach (var item in GameInfoManager.instance.playerInventory.dicPlayerInventory)
         {
-            if (item.Value <= 0)
+            if(itemSlotGroup.transform.Find("ItemSlot_" + idx) == null)
+            {
+                break;
+            }
+
+            if (item.Value.itemCnt <= 0)
             {
                 itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = "";
                 itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = 0;
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemID = 0;
+
                 itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().UpdateItemInfo();
                 listInvenSlot.Add(itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
             }
             else
             {
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = item.Key;
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = item.Value;
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = item.Value.itemName;
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = item.Value.itemCnt;
+                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemID = item.Value.itemID;
+
                 listInvenSlot.Add(itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
                 idx++;
             }
