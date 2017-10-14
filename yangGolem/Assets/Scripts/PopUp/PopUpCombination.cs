@@ -65,7 +65,7 @@ public class PopUpCombination : MonoBehaviour
             GameObject row = Instantiate(ResourceManager.instance.popup["RowSlotGroup"] as GameObject) as GameObject;
             row.name = "RowSlotGroup_" + idx++;
             row.transform.parent = uiGrid.transform;
-            row.transform.localPosition = Vector3.zero;
+            row.transform.localPosition = Vector3.zero;//new Vector3(0.0f, 0.0f, 0.1f);
             row.transform.localScale = Vector3.one;
 
 
@@ -156,6 +156,9 @@ public class PopUpCombination : MonoBehaviour
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ExitButtonEvent();
+        }
     }
 }

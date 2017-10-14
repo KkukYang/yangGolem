@@ -67,6 +67,15 @@ public class PopUpManager : MonoBehaviour {
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (listPopUp.Find(obj => obj.name == "PopUpCombination") == null)
+            {
+                GameObject popUpCombination = ResourceManager.instance.GetPopUp("PopUpCombination");
+                popUpCombination.SetActive(true);
+            }
+        }
+
         //if (Input.GetKeyDown(KeyCode.K))
         //{
         //    if (listPopUp.Find(obj => obj.name == "PopUpEquipment") == null)

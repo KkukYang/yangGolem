@@ -75,12 +75,15 @@ public class Chicken : MonsterBehaviour
 
         _meat.name = "Meat";
         _meat.transform.parent = this.transform.parent;
-        //_meat.transform.position = new Vector3(curCubeUnderMonster.transform.position.x
-        //            , curCubeUnderMonster.transform.Find("InvisibleCube").GetComponent<BoxCollider>().bounds.max.y
-        //            , curCubeUnderMonster.transform.position.z);
-        _meat.transform.position = this.transform.position;
+        _meat.transform.position = new Vector3(curCubeUnderMonster.transform.position.x
+                    , curCubeUnderMonster.transform.Find("InvisibleCube").GetComponent<BoxCollider>().bounds.max.y
+                    , curCubeUnderMonster.transform.position.z);
+        //_meat.transform.position = this.transform.position;
 
         _meat.SetActive(true);
+
+        ResourceManager.instance.CreateEffectObj("Eff_ItemGen", _meat.transform.position, 1.0f).SetActive(true);
+
     }
 
 

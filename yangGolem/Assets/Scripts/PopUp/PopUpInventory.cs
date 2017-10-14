@@ -18,55 +18,63 @@ public class PopUpInventory : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach (Transform tm in itemSlotGroup.transform)
-        {
-            tm.Find("Image").gameObject.SetActive(false);
-            tm.Find("Label").gameObject.SetActive(false);
-        }
-
 
         PopUpManager.instance.StartPopUp(this.gameObject);
 
         Invoke("SetPopUpInit", 0.1f);
     }
 
+    private void OnDisable()
+    {
+        //일단 그리드 하위 오브젝트 싹 비우고. 나중에 재활용 하던지 팝업이니 그냥 이렇게 일단.
+        for (int i = 0; i < itemSlotGroup.transform.childCount; i++)
+        {
+            Destroy(itemSlotGroup.transform.GetChild(i).gameObject);
+        }
+
+    }
 
     public void SetPopUpInit()
     {
-        foreach(Transform tm in itemSlotGroup.transform)
-        {
-            tm.Find("Image").gameObject.SetActive(false);
-            tm.Find("Label").gameObject.SetActive(false);
-        }
-
         listInvenSlot.Clear();
 
         int idx = 0;
-
+        int rowNum = 0;
         foreach (var item in GameInfoManager.instance.playerInventory.dicPlayerInventory)
         {
-            if(itemSlotGroup.transform.Find("ItemSlot_" + idx) == null)
+            if(idx == 0)
             {
-                break;
+                //한 행 생성.
+                GameObject row = Instantiate(ResourceManager.instance.popup["RowSlotGroupInventory"] as GameObject) as GameObject;
+                row.name = "RowSlotGroup_" + rowNum++;
+                row.transform.parent = itemSlotGroup.transform;
+                row.transform.localPosition = Vector3.zero;//new Vector3(0.0f, 0.0f, 0.1f);
+                row.transform.localScale = Vector3.one;
+                row.SetActive(true);
             }
 
-            if (item.Value.itemCnt <= 0)
+            if (item.Value.itemCnt > 0)
             {
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = "";
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = 0;
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemID = 0;
+                itemSlotGroup.transform.Find("RowSlotGroup_" + (rowNum - 1).ToString() + "/ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = item.Value.itemName;
+                itemSlotGroup.transform.Find("RowSlotGroup_" + (rowNum - 1).ToString() + "/ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = item.Value.itemCnt;
+                itemSlotGroup.transform.Find("RowSlotGroup_" + (rowNum - 1).ToString() + "/ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemID = item.Value.itemID;
 
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().UpdateItemInfo();
-                listInvenSlot.Add(itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
+                listInvenSlot.Add(itemSlotGroup.transform.Find("RowSlotGroup_" + (rowNum - 1).ToString() + "/ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
+                idx++;
             }
             else
             {
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = item.Value.itemName;
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = item.Value.itemCnt;
-                itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemID = item.Value.itemID;
+                //itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemName = "";
+                //itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemCnt = 0;
+                //itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().itemID = 0;
 
-                listInvenSlot.Add(itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
-                idx++;
+                //itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>().UpdateItemInfo();
+                //listInvenSlot.Add(itemSlotGroup.transform.Find("ItemSlot_" + idx).GetComponent<InventoryItemSlot>());
+            }
+
+            if(idx == 3)
+            {
+                idx = 0;
             }
         }
 
@@ -74,6 +82,8 @@ public class PopUpInventory : MonoBehaviour
         {
             slot.UpdateItemInfo();
         }
+
+        itemSlotGroup.GetComponent<UIGrid>().enabled = true;
     }
 
     void ExitButtonEvent()
@@ -84,6 +94,10 @@ public class PopUpInventory : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ExitButtonEvent();
+        }
 
     }
 }

@@ -81,6 +81,8 @@ public class Pig : MonsterBehaviour
                     , curCubeUnderMonster.transform.Find("InvisibleCube").GetComponent<BoxCollider>().bounds.max.y
                     , curCubeUnderMonster.transform.position.z);
         _meat.SetActive(true);
+
+        ResourceManager.instance.CreateEffectObj("Eff_ItemGen", _meat.transform.position, 1.0f).SetActive(true);
     }
 
     void Update()

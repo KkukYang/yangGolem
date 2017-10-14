@@ -239,7 +239,7 @@ public abstract class MonsterBehaviour : MonoBehaviour {
         yield return CoroutineManager.instance.GetWaitForSeconds(1.5f);
         this.transform.DOScale(0.1f, 1.0f).SetEase(Ease.InCubic);
         yield return CoroutineManager.instance.GetWaitForSeconds(1.0f);
-        ResourceManager.instance.CreateEffectObj("Eff_ItemGen", this.transform.position, 1.0f).SetActive(true);
+        //ResourceManager.instance.CreateEffectObj("Eff_ItemGen", this.transform.position, 1.0f).SetActive(true);
         Die();  //아이템 드랍등.
         yield return CoroutineManager.instance.GetWaitForSeconds(0.5f);
         this.transform.parent = ResourceManager.instance.monsterBox.transform;
