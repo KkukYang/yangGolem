@@ -40,7 +40,7 @@ public class GameInfoManager : MonoBehaviour
         Screen.SetResolution(1920, 1080, false);
         Application.runInBackground = true;
         Time.timeScale = timeScale;
-		Application.targetFrameRate = 60;
+		Application.targetFrameRate = 50;
 
         MonsterSpawnInfoEachTileParseFromJson();
         FieldObjectInfoParseFromJson();
