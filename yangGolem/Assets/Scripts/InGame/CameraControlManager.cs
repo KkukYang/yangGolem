@@ -12,7 +12,11 @@ public class CameraControlManager : MonoBehaviour
     public Vector3 initCameraPos;
     public Vector3 initPlayerPos;
 
+    public Transform tmFloorTileGroup;
+    public float boundary;
+
     //[Range(5, 20)]
+    private float preFov;
     public float fov;
     public float min;
     public float max;
@@ -31,7 +35,7 @@ public class CameraControlManager : MonoBehaviour
     {
         isInit = false;
         thisCamera = GetComponent<Camera>();
-        fov = thisCamera.fieldOfView = 50.0f;
+        thisCamera.fieldOfView = fov;
 
 		Transform p = this.transform.parent;
 
@@ -44,10 +48,14 @@ public class CameraControlManager : MonoBehaviour
         initCameraPos = this.transform.position;
         initPlayerPos = player.transform.position;
 
-        min *= TileInfoManager.instance.viewAround * 0.1f;
-        max *= TileInfoManager.instance.viewAround * 0.1f;
-        zoomSnap *= TileInfoManager.instance.viewAround * 0.1f;
-        fov *= TileInfoManager.instance.viewAround * 0.1f;
+        //min *= TileInfoManager.instance.viewAround * 0.1f;
+        //max *= TileInfoManager.instance.viewAround * 0.1f;
+        //zoomSnap *= TileInfoManager.instance.viewAround * 0.1f;
+        //fov *= TileInfoManager.instance.viewAround * 0.1f;
+        //min = 40;
+        //max = 70;
+        //zoomSnap = 5;
+        //fov = 50;
         isInit = true;
 
         //StartCoroutine(UpdateTranslucent());
@@ -190,6 +198,29 @@ public class CameraControlManager : MonoBehaviour
             }
 
             thisCamera.fieldOfView = Mathf.Clamp(fov, min, max);
+
+            //if(preFov != fov  //달라졌고,
+            //    && preFov < boundary //이전이 경계보다 작았고,
+            //    && fov > boundary) //현재 경계보다 커졌을때,
+            //{
+            //    //넓게 보임.
+            //    foreach (Transform tm in tmFloorTileGroup)
+            //    {
+            //        tm.Find("InvisibleCube").GetComponent<LODGroup>().ForceLOD(1);
+            //    }
+            //}
+            //else if(preFov != fov
+            //    && preFov > boundary
+            //    && fov < boundary)
+            //{
+            //    //좁게 보임.
+            //    foreach (Transform tm in tmFloorTileGroup)
+            //    {
+            //        tm.Find("InvisibleCube").GetComponent<LODGroup>().ForceLOD(0);
+            //    }
+            //}
+
+            preFov = fov;
         }
 
 

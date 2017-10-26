@@ -13,6 +13,9 @@ public class FieldObject : MonoBehaviour
 
     public bool isPicked = false;
     public float pickedTimer = 0.0f;
+	public int row;	//해당 오브젝트가 차지하는 세로 길이.
+	public int col;	// 해당 오브젝트가 차지하는 가로 길이.
+
 
     void Awake()
 	{

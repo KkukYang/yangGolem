@@ -100,7 +100,7 @@ public class MonsterManager : MonoBehaviour
 
         if (!GameInfoManager.instance.dicMonsterSpawnInfoEachTile.ContainsKey(_type))
         {
-            Debug.Log("not exist Tile In MonsterSpawn(int _type) : " + _type);
+            //Debug.Log("not exist Tile In MonsterSpawn(int _type) : " + _type);
             return;
         }
 
@@ -139,7 +139,7 @@ public class MonsterManager : MonoBehaviour
         {
             case (int)MONSTERTYPE.Chicken:
                 {
-                    Debug.Log("Chicken " + _positionID);
+                    //Debug.Log("Chicken " + _positionID);
                     MonsterInfo _monsterInfo = new MonsterInfo();
                     _monsterInfo.monsterID = monsterID;
                     _monsterInfo.monsterName = MONSTERTYPE.Chicken.ToString();
@@ -151,7 +151,7 @@ public class MonsterManager : MonoBehaviour
                 break;
             case (int)MONSTERTYPE.Pig:
                 {
-                    Debug.Log("Pig " + _positionID);
+                    //Debug.Log("Pig " + _positionID);
                     MonsterInfo _monsterInfo = new MonsterInfo();
                     _monsterInfo.monsterID = monsterID;
                     _monsterInfo.monsterName = MONSTERTYPE.Pig.ToString();

@@ -16,35 +16,31 @@ public class ItemOnLand : MonoBehaviour
 
     }
 
-    void Update()
+    private void OnEnable()
     {
+        RaycastHit hitTileCheck;
+        int mask = 1 << LayerMask.NameToLayer("Cube");
+        Debug.DrawRay(this.transform.position,
+            transform.TransformDirection(-Vector3.up * rayLenth),
+            Color.red);
+
+        if (Physics.Raycast(this.transform.position
+            , -Vector3.up //transform.TransformDirection(-Vector3.up)
+            , out hitTileCheck, rayLenth, mask))
         {
-            RaycastHit hitTileCheck;
-            int mask = 1 << LayerMask.NameToLayer("Cube");
-            Debug.DrawRay(this.transform.position,
-                transform.TransformDirection(-Vector3.up * rayLenth),
-                Color.red);
-
-            if (Physics.Raycast(this.transform.position
-                , -Vector3.up //transform.TransformDirection(-Vector3.up)
-                , out hitTileCheck, rayLenth, mask))
+            if (hitTileCheck.transform.parent.GetComponent<GeographyCube>() != null)
             {
-                if (hitTileCheck.transform.parent.GetComponent<GeographyCube>() != null)
-                {
-                    curCubeUnderItem = hitTileCheck.transform.parent.GetComponent<GeographyCube>();
+                curCubeUnderItem = hitTileCheck.transform.parent.GetComponent<GeographyCube>();
 
-                    itemOnLandInfo.positionID = curCubeUnderItem.positionID;
-                    itemOnLandInfo.layerID = curCubeUnderItem.layerID;
-                }
+                itemOnLandInfo.positionID = curCubeUnderItem.positionID;
+                itemOnLandInfo.layerID = curCubeUnderItem.layerID;
             }
         }
-
     }
-
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if(other.name == "ItemCollider")
         {
             //먹어지는거.
             if (Input.GetKeyDown(KeyCode.F))

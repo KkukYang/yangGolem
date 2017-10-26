@@ -6,7 +6,7 @@ using System.Linq;
 public class GeographyCube : MonoBehaviour
 {
     public EnumCubeType cubeType;
-    public bool isEnableBuild = false;  //위에 지형을 놓을때.
+    //public bool isEnableBuild = false;  //위에 지형을 놓을때.
     public bool isSuitable = false; //나무 등등 놓을때.
     public bool isCurSelectFromTileInfo = false; //TileInfoManager 에서 현재 선택한 큐브.
     public bool isExistOnCube = false;
@@ -22,26 +22,38 @@ public class GeographyCube : MonoBehaviour
     public GameObject upper;
 	public GameObject invisibleCube;
 
-    private void OnEnable()
-    {
-        if(cubeType == EnumCubeType.NULL 
-            //|| cubeType == EnumCubeType.Water
-            || cubeType == EnumCubeType.SlopeUp
-            || cubeType == EnumCubeType.SlopeDown
-            || cubeType == EnumCubeType.SlopeLeft
-            || cubeType == EnumCubeType.SlopeRight)
-        {
-            isEnableBuild = false;
-        }
-        else
-        {
-            isEnableBuild = true;
-        }
 
+    private void Awake()
+    {
         invisibleCube = this.transform.Find("InvisibleCube").gameObject;
         grid = this.transform.Find("Grid").gameObject;
         upper = invisibleCube.transform.Find("Upper").gameObject;
         cube = invisibleCube.transform.Find("Cube").gameObject;
+    }
+
+
+    private void OnEnable()
+    {
+        //if(cubeType == EnumCubeType.NULL 
+        //    //|| cubeType == EnumCubeType.Water
+        //    || cubeType == EnumCubeType.SlopeUp
+        //    || cubeType == EnumCubeType.SlopeDown
+        //    || cubeType == EnumCubeType.SlopeLeft
+        //    || cubeType == EnumCubeType.SlopeRight)
+        //{
+        //    isEnableBuild = false;
+        //}
+        //else
+        //{
+        //    isEnableBuild = true;
+        //}
+
+        grid.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        grid.SetActive(false);
     }
 
     void Start()
@@ -51,18 +63,18 @@ public class GeographyCube : MonoBehaviour
 
     void Update()
     {
-        if ((TileInfoManager.instance.curSelectCube != null && isEnableBuild && !isCurSelectFromTileInfo)
+        if ((TileInfoManager.instance.curSelectCube != null && !isCurSelectFromTileInfo)
             ||(TileInfoManager.instance.curSelectObject != null && isCurSelectFromTileInfo))
         {
             grid.SetActive(true);
 
-            if(cubeType == EnumCubeType.Water)
-            {
-                if (cube.GetComponent<BoxCollider>() != null)
-                {
-                    cube.GetComponent<BoxCollider>().enabled = true;
-                }
-            }
+            //if(cubeType == EnumCubeType.Water)
+            //{
+            //    if (cube.GetComponent<BoxCollider>() != null)
+            //    {
+            //        cube.GetComponent<BoxCollider>().enabled = true;
+            //    }
+            //}
 
             if (isCurSelectFromTileInfo 
                 && layerID != TileInfoManager.instance.layerIDMin )
@@ -89,13 +101,13 @@ public class GeographyCube : MonoBehaviour
         {
             grid.SetActive(false);
 
-            if (cubeType == EnumCubeType.Water)
-            {
-                if (cube.GetComponent<BoxCollider>() != null)
-                {
-                    cube.GetComponent<BoxCollider>().enabled = false;
-                }
-            }
+            //if (cubeType == EnumCubeType.Water)
+            //{
+            //    if (cube.GetComponent<BoxCollider>() != null)
+            //    {
+            //        cube.GetComponent<BoxCollider>().enabled = false;
+            //    }
+            //}
         }
 
 
@@ -112,8 +124,8 @@ public class GeographyCube : MonoBehaviour
         }
         else
         {
-            if(cubeType != EnumCubeType.Water)
-            {
+            //if(cubeType != EnumCubeType.Water)
+            //{
                 if (cube.GetComponent<BoxCollider>() != null)
                 {
                     cube.GetComponent<BoxCollider>().enabled = true;
@@ -122,7 +134,7 @@ public class GeographyCube : MonoBehaviour
                 {
                     cube.GetComponent<MeshCollider>().enabled = true;
                 }
-            }
+            //}
         }
 
 //        //Select Located Object.

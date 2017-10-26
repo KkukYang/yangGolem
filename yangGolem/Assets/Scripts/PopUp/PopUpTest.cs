@@ -104,8 +104,10 @@ public class PopUpTest : MonoBehaviour
             {
                 Debug.Log(hit.transform.name);
                 //selectObject 이름안에 정보가 들어 있다. 첫번째x크기, 두번째y크기
-                string[] arrStr = selectObject.name.Split('_');
-                TileInfoManager.instance.arrStrCurSelectObjectName = selectObject.name.Split('_');
+                // string[] arrStr = selectObject.name.Split('_');
+                // TileInfoManager.instance.arrStrCurSelectObjectName = selectObject.name.Split('_');
+                TileInfoManager.instance.curSelectObjectCol = selectObject.GetComponent<FieldObject>().col;
+                TileInfoManager.instance.curSelectObjectRow = selectObject.GetComponent<FieldObject>().row;
 
                 //{   //나중에 오브젝트 풀링 쓰자 ResourceManager에서 관리 할 것.
                 //    foreach (GameObject obj in CheckLocationByClick.instance.listSelectTile)
@@ -144,7 +146,7 @@ public class PopUpTest : MonoBehaviour
 
 
                 TileInfoManager.instance.curSelectObject = Instantiate(selectObject);
-                TileInfoManager.instance.curSelectObject.transform.parent = TileInfoManager.instance.floorTileGroup.transform;
+                TileInfoManager.instance.curSelectObject.transform.parent = TileInfoManager.instance.fieldObjectGroup;
                 ////센터에 맞춰야함.
                 //TileInfoManager.instance.curSelectObject.transform.localPosition = new Vector3((float.Parse(arrStr[1]) - 1.0f) * 0.25f
                 //    , 0.0f
@@ -156,6 +158,7 @@ public class PopUpTest : MonoBehaviour
                 TileInfoManager.instance.curSelectObject.transform.SetChildLayer(LayerMask.NameToLayer("SelectedObj"));
 
                 TileInfoManager.instance.isConstruction = true;
+                TileInfoManager.instance.StartCoroutine("ConclusionFieldObject");
 
                 Destroy(selectObject);
 

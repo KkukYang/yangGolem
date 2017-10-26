@@ -8,6 +8,7 @@ public class PopUpCombination : MonoBehaviour
     public UIGrid uiGrid;
 
     public UIButton exitButton;
+    Dictionary<int, ItemInfo> dicPlayerInventory;
 
     private void Awake()
     {
@@ -18,7 +19,7 @@ public class PopUpCombination : MonoBehaviour
 
     private void OnEnable()
     {
-
+        dicPlayerInventory = GameInfoManager.instance.playerInventory.dicPlayerInventory;
 
         ////테스트용.
         //for (int i = 0; i < 5; i++)
@@ -34,35 +35,43 @@ public class PopUpCombination : MonoBehaviour
         //float time = Time.deltaTime; //1초를 프레임레이트로 나눈것 60프레임이라면 1/60 의 값이 떨어짐.
         //Time.time;
 
-        SetPopUpInit();
-
-        Invoke("StartPopUp", 0.3f);
-
-    }
-
-    private void OnDisable()
-    {
-        //일단 그리드 하위 오브젝트 싹 비우고. 나중에 재활용 하던지 팝업이니 그냥 이렇게 일단.
-        for (int i = 0; i < uiGrid.transform.childCount; i++)
-        {
-            Destroy(uiGrid.transform.GetChild(i).gameObject);
-        }
-
-    }
-
-    public void StartPopUp()
-    {
+        //SetPopUpInit();
         PopUpManager.instance.StartPopUp(this.gameObject);
+
+        Invoke("SetPopUpInit", 0.1f);
+
     }
+
+    //private void OnDisable()
+    //{
+    //    //일단 그리드 하위 오브젝트 싹 비우고. 나중에 재활용 하던지 팝업이니 그냥 이렇게 일단.
+    //    for (int i = 0; i < uiGrid.transform.childCount; i++)
+    //    {
+    //        Destroy(uiGrid.transform.GetChild(i).gameObject);
+    //    }
+
+    //}
+
+    //public void StartPopUp()
+    //{
+    //    PopUpManager.instance.StartPopUp(this.gameObject);
+    //}
 
     public void SetPopUpInit()
     {
-        this.transform.localScale = Vector3.zero;
-
         int idx = 0;
         foreach (var combination in GameInfoManager.instance.dicItemCombinationInfo)
         {
-            GameObject row = Instantiate(ResourceManager.instance.popup["RowSlotGroup"] as GameObject) as GameObject;
+            GameObject row = null;
+            if(uiGrid.transform.Find("RowSlotGroup_" + idx) != null)
+            {
+                row = uiGrid.transform.Find("RowSlotGroup_" + idx).gameObject;
+            }
+            else
+            {
+                row = Instantiate(ResourceManager.instance.popup["RowSlotGroup"] as GameObject);
+            }
+
             row.name = "RowSlotGroup_" + idx++;
             row.transform.parent = uiGrid.transform;
             row.transform.localPosition = Vector3.zero;//new Vector3(0.0f, 0.0f, 0.1f);
@@ -78,7 +87,7 @@ public class PopUpCombination : MonoBehaviour
                 row.transform.Find("ItemSlot_" + matIdx + "/Image").GetComponent<UISprite>().spriteName = material.ToString();
 
                 //아이템들의 갯수를 판단하여 Cover를 씌울지 말지 결정해야한다.
-                int itemCnt = GameInfoManager.instance.playerInventory.dicPlayerInventory[material].itemCnt;
+                int itemCnt = dicPlayerInventory[material].itemCnt;
                 if (itemCnt > 0)
                 {
                     row.transform.Find("ItemSlot_" + matIdx + "/Cover").gameObject.SetActive(false);
@@ -111,7 +120,7 @@ public class PopUpCombination : MonoBehaviour
 
             row.transform.Find("ItemSlot_" + matIdx + "/Image").GetComponent<UISprite>().spriteName = combination.Value.id.ToString();
 
-            int mixedItemCnt = GameInfoManager.instance.playerInventory.dicPlayerInventory[combination.Value.id].itemCnt;
+            int mixedItemCnt = dicPlayerInventory[combination.Value.id].itemCnt;
             if (mixedItemCnt > 0)
             {
                 row.transform.Find("ItemSlot_" + matIdx + "/Label").GetComponent<UILabel>().color = Color.black;

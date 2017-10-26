@@ -15,24 +15,6 @@ public class Pig : MonsterBehaviour
     float rayLenth = 1.5f;
     public GeographyCube curCubeUnderMonster = new GeographyCube();
 
-    //void Start()
-    //{
-    //    _behaviour = this;
-    //    player = GameObject.FindWithTag("Player").transform;
-    //    nav = GetComponent<NavMeshAgent>();
-    //    anim = GetComponent<Animation>();
-    //    monsterState = MONSTERSTATE.Idle;
-
-    //    maxHp = hp;     //Max Hp
-    //    currentHp = hp; //hp changing check
-    //    escapeDistance = moveDistance * 4;
-
-    //    gogi = null;
-    //    collider = GetComponent<Collider>();
-
-    //    NextState();
-
-    //}
 
     private void OnEnable()
     {
@@ -45,7 +27,7 @@ public class Pig : MonsterBehaviour
         collider = GetComponent<Collider>();
 
         collider.enabled = true;
-        nav.enabled = true;
+        //nav.enabled = true;
         monsterState = MONSTERSTATE.Idle;
 
         maxHp = hp;     //Max Hp
@@ -55,7 +37,7 @@ public class Pig : MonsterBehaviour
         gogi = null;
         isDie = false;
 
-        NextState();
+        //NextState();
     }
 
     protected override void Die()
@@ -87,7 +69,7 @@ public class Pig : MonsterBehaviour
 
     void Update()
     {
-        if (!isDie)
+        if (!isDie && nav.enabled)
         {
             RaycastHit hitTileCheck;
             int mask = 1 << LayerMask.NameToLayer("Cube");
