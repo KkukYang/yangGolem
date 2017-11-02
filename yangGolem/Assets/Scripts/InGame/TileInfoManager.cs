@@ -79,7 +79,7 @@ public class TileInfoManager : MonoBehaviour
 
         //Hero Set Position.
         heroObj.transform.localPosition = new Vector3((stageInfo.heroPos % col) * eachTileScale - (0.5f * 0.5f) * (col - 1)
-            , heroObj.transform.localPosition.y + stageInfo.heroLayer * eachTileScale
+            , (stageInfo.heroLayer + 1) * eachTileScale
             , (stageInfo.heroPos / row) * eachTileScale + (0.5f * 0.5f) * (row - 1));
 
     }
@@ -107,6 +107,11 @@ public class TileInfoManager : MonoBehaviour
 
     IEnumerator LoadingRestMap()
     {
+        UIManager.instance.Loading.GetComponent<UIPanel>().alpha = 1.0f;
+        UIManager.instance.Loading.transform.Find("ProgressBar").GetComponent<UISprite>().fillAmount = 0.0f;
+        UIManager.instance.Loading.transform.Find("Label").GetComponent<UILabel>().text = (0.0f).ToString("N1");
+        UIManager.instance.Loading.SetActive(true);
+
         for (int y = 0; y < row; y++)
         {
             for (int x = 0; x < col; x++)
@@ -199,11 +204,22 @@ public class TileInfoManager : MonoBehaviour
 
             if (y % 100 == 0)
             {
+                UIManager.instance.Loading.transform.Find("ProgressBar").GetComponent<UISprite>().fillAmount = (float)y / (float)row;
+                UIManager.instance.Loading.transform.Find("Label").GetComponent<UILabel>().text = ((float)y / (float)row * 100.0f).ToString("N1");
                 yield return null;
             }
         }
 
+        UIManager.instance.Loading.transform.Find("ProgressBar").GetComponent<UISprite>().fillAmount = 1.0f;
+        UIManager.instance.Loading.transform.Find("Label").GetComponent<UILabel>().text = (100.0f).ToString("N1");
         isDoneLoadingMap = true;
+
+        while(UIManager.instance.Loading.GetComponent<UIPanel>().alpha > 0.01f)
+        {
+            UIManager.instance.Loading.GetComponent<UIPanel>().alpha -= 0.01f;
+
+            yield return null;
+        }
     }
 
 
@@ -277,7 +293,7 @@ public class TileInfoManager : MonoBehaviour
         //yield return new WaitForEndOfFrame();
         cubeCnt++;
 
-        return;
+        //return;
 
         //몬스터 스폰. 이미 등록되어 있는 얘들을 뿌린다. 먼저 해당 타일에 있는지 판단하자.
         MonsterInfo monsterInfo = null;
@@ -323,6 +339,22 @@ public class TileInfoManager : MonoBehaviour
         //        MonsterSpawn(_type);
         //    }
         //}
+
+        //fieldObject Random spawn
+        if(UnityEngine.Random.Range(0.0f, 100.0f) <= 1.8f)
+        {
+            if (_type.ToString().Contains("Grass"))
+            {
+                SetFieldOnLand(fieldObjectGroup, _x, _y, _layer + 1, EnumFieldObject.Tree);
+
+            }
+            else if (_type.ToString().Contains("Sand"))
+            {
+                SetFieldOnLand(fieldObjectGroup, _x, _y, _layer + 1, EnumFieldObject.Rock);
+
+            }
+        }
+
     }
 
 

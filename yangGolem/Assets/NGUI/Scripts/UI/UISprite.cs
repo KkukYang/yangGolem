@@ -15,7 +15,7 @@ using System.Collections.Generic;
 public class UISprite : UIBasicSprite
 {
 	// Cached and saved values
-	[HideInInspector][SerializeField] UIAtlas mAtlas;
+	[HideInInspector][SerializeField] protected UIAtlas mAtlas;
 	[HideInInspector][SerializeField] string mSpriteName;
 
 	// Deprecated, no longer used

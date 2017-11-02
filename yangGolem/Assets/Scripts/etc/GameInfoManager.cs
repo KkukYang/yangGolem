@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using JsonFx.Json;
+//using JsonFx.Json;
 using LitJson;
 using System.IO;
 
@@ -32,7 +32,7 @@ public class GameInfoManager : MonoBehaviour
     public Dictionary<int, ItemInfoFromJson> dicItemInfo = new Dictionary<int, ItemInfoFromJson>(); // key : 100000, 100001 
     public Dictionary<int, MonsterInfoFromJson> dicMonsterInfo = new Dictionary<int, MonsterInfoFromJson>();        // key : 10000, 10001 
 
-
+    public Dictionary<int, int> dicQuickSlotInfo;// = new Dictionary<int, int>(); //key : slotid, val : itemid
 
     private void Awake()
     {
@@ -49,6 +49,7 @@ public class GameInfoManager : MonoBehaviour
         MonsterInfoParseFromJson();
 
         InitializePlayerInventory();
+        InitializeQuickSlot();
     }
 
     void Start()
@@ -56,6 +57,23 @@ public class GameInfoManager : MonoBehaviour
 
     }
 
+    private void InitializeQuickSlot()
+    {
+        //바닥 타일 데이터 셋팅. 실제 큐브 객체생성은 하지 않음.
+
+        string jsonText = ReadStringFromFile("QuickSlot");
+        Debug.Log("InitializeQuickSlot() : " + jsonText);
+
+        if (jsonText != null && !isInit)
+        {
+            dicQuickSlotInfo = LitJson.JsonMapper.ToObject<Dictionary<int, int>>(jsonText);
+        }
+        else
+        {
+            dicQuickSlotInfo = new Dictionary<int, int>();
+        }
+
+    }
 
 
     private void InitializePlayerInventory()
@@ -81,7 +99,7 @@ public class GameInfoManager : MonoBehaviour
                 {
                     itemID = item.Key
                     , itemName = item.Value.name
-                    , itemCnt = 10
+                    , itemCnt = 3
                 };
 
                 playerInventory.dicPlayerInventory.Add(item.Key, _tempItemInfo);
@@ -106,7 +124,11 @@ public class GameInfoManager : MonoBehaviour
     {
         string jsonText = JsonFx.Json.JsonWriter.Serialize(playerInventory);
         Debug.Log("playerInventory : " + jsonText);
-        GameInfoManager.instance.WriteStringToFile(jsonText, "playerInventory");
+        WriteStringToFile(jsonText, "playerInventory");
+
+        jsonText = LitJson.JsonMapper.ToJson(dicQuickSlotInfo);
+        Debug.Log("QuickSlot : " + jsonText);
+        WriteStringToFile(jsonText, "QuickSlot");
     }
 
 

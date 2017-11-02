@@ -136,13 +136,15 @@ public class PopUpCombination : MonoBehaviour
             //결과적으로 아이템이 모두 준비되었을때 결과 아이템도 Cover를 씌울지 말지 결정. matIdx를 이용 이전꺼가 켜졌는지 아닌지.
             for (int i = 0; i < matIdx; i++)
             {
-                if (!row.transform.Find("ItemSlot_" + i + "/Cover").gameObject.activeSelf)//안켜져있으면 합성 가능하다는것.
+                if (!row.transform.Find("ItemSlot_" + i + "/Cover").gameObject.activeSelf)//안켜져있으면 합성 가능하다는것. //합성버튼은 활성화.
                 {
                     row.transform.Find("ItemSlot_" + matIdx + "/Cover").gameObject.SetActive(false);
+                    row.transform.Find("CombinationButton").gameObject.SetActive(true);
                 }
                 else
                 {
                     row.transform.Find("ItemSlot_" + matIdx + "/Cover").gameObject.SetActive(true);
+                    row.transform.Find("CombinationButton").gameObject.SetActive(false);
                     break;
                 }
             }

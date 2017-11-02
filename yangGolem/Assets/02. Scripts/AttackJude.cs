@@ -23,7 +23,7 @@ public class AttackJude : MonoBehaviour {
             clone.transform.position = pos;//(coll.transform.position + transform.position) * 0.5f;
             clone.SetActive(true);
 
-            coll.GetComponent<MonsterBehaviour>().hp -= 1.0f;
+            coll.GetComponent<MonsterBehaviour>().hp -= Player.instance.ap;
             coll.GetComponent<MonsterBehaviour>().monsterState = MonsterBehaviour.MONSTERSTATE.Damage;
 
             AttackMgr.instance.AttackAction();

@@ -41,6 +41,9 @@ public class Player : MonoBehaviour
 
     public float MaxHp;
     public float hp;
+    public float ap;
+    public float sp;
+
     public bool die;
     //	public UISprite hpBar;
     //	public UISprite hpBarFade;
@@ -83,6 +86,8 @@ public class Player : MonoBehaviour
         characterController = GetComponent<CharacterController>();
 
         hp = MaxHp;
+        ap = 0.0f;
+        sp = 0.0f;
         die = false;
         //hpBar.fillAmount = hpBarFade.fillAmount;
 
@@ -362,11 +367,6 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        //		hpBar.fillAmount = hp / MaxHp;
-        //		if (hpBar.fillAmount < hpBarFade.fillAmount) {
-        //			hpBarFade.fillAmount -= Time.deltaTime/10; 
-        //		}
-
     }
 
 
@@ -539,6 +539,29 @@ public class Player : MonoBehaviour
         return vec;
     }
 
+    public void SetHealing(int _healPoint)
+    {
+        hp += _healPoint;
+
+        if(hp > MaxHp)
+        {
+            hp = MaxHp;
+        }
+    }
+
+    public void SetPutOnEquipment(ItemInfoFromJson _itemInfo)
+    {
+        ap += _itemInfo.add_ap;
+        sp += _itemInfo.add_sp;
+        MaxHp += _itemInfo.add_hp;
+    }
+
+    public void SetTakeOffEquipment(ItemInfoFromJson _itemInfo)
+    {
+        ap -= _itemInfo.add_ap;
+        sp -= _itemInfo.add_sp;
+        MaxHp -= _itemInfo.add_hp;
+    }
 
     // public void OnAttackMove(int num)
     // {
@@ -580,7 +603,7 @@ public class Player : MonoBehaviour
     //             if (speed <= 0)
     //                 speed = 0;
     //         }
-            
+
     //         yield return new WaitForFixedUpdate();
     //     }
     //     yield return null;

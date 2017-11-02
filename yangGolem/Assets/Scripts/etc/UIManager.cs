@@ -5,7 +5,6 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     private static UIManager s_instance = null;
-
     public static UIManager instance
     {
         get
@@ -23,7 +22,7 @@ public class UIManager : MonoBehaviour
     }
 
     public GameObject tempObj;
-
+    public GameObject Loading;
 
     private void Awake()
     {

@@ -22,13 +22,13 @@ public class InventoryItemSlot : MonoBehaviour
     {
         itemImage = this.transform.Find("Image").GetComponent<UISprite>();
         itemCntLabel = this.transform.Find("Label").GetComponent<UILabel>();
-        popUpInventory = this.transform.parent.parent.parent.GetComponent<PopUpInventory>();
+        popUpInventory = PopUpManager.instance.transform.Find("PopUpInventory").GetComponent<PopUpInventory>();
     }
 
 
     private void OnEnable()
     {
-        
+
     }
 
 
@@ -41,10 +41,10 @@ public class InventoryItemSlot : MonoBehaviour
     {
         Debug.Log("InventoryItemSlot OnPress" + _flag);
 
-        if(_flag)
+        if (_flag)
         {
             //옮기는것.
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 Debug.Log("GetMouseButtonDown(0)");
                 if (UIManager.instance.tempObj.transform.Find("ItemCursor") != null)
@@ -70,9 +70,140 @@ public class InventoryItemSlot : MonoBehaviour
             {
                 Debug.Log("GetMouseButtonDown(1)");
 
-                if(GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemID))
+                int itemClass = (itemID % 10000) / 1000;
+
+                //아이템 id의 셋째자리를 검사해야함. 2~6 은 장비. 기획에 따라 연속적이지 않을 수 있음.
+                if (GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemID))
                 {
-                    GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
+                    if (itemClass == 1)
+                    {
+                        //먹는거. 액티브 아이템. 보통 체력만 올림.
+                        GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
+                        //체력 증가.
+                        Player.instance.SetHealing(GameInfoManager.instance.dicItemInfo[itemID].re_hp);
+                    }
+                    else if (itemClass == 2)
+                    {
+                        //무기
+                        Debug.Log("SlotWeapon");
+                        int exEquipment = 0;
+
+                        if(!popUpInventory.equipGroup.Find("SlotWeapon/Image").gameObject.activeSelf)  //장착되게 없다면.
+                        {
+                            popUpInventory.equipGroup.Find("SlotWeapon/Image").gameObject.SetActive(true);
+                            popUpInventory.equipGroup.Find("SlotWeapon/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+                        else //이미 뭔가 장착된게 있다면,
+                        {
+                            exEquipment = int.Parse(popUpInventory.equipGroup.Find("SlotWeapon/Image").GetComponent<UISprite>().spriteName);
+                            GameInfoManager.instance.playerInventory.dicPlayerInventory[exEquipment].itemCnt++;
+                            Player.instance.SetTakeOffEquipment(GameInfoManager.instance.dicItemInfo[exEquipment]);
+                            popUpInventory.equipGroup.Find("SlotWeapon/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+
+                        GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
+                        Player.instance.SetPutOnEquipment(GameInfoManager.instance.dicItemInfo[itemID]);
+                    }
+                    else if (itemClass == 3)
+                    {
+                        //투구
+                        Debug.Log("SlotHead");
+                        int exEquipment = 0;
+
+                        if (!popUpInventory.equipGroup.Find("SlotHead/Image").gameObject.activeSelf)  //장착되게 없다면.
+                        {
+                            popUpInventory.equipGroup.Find("SlotHead/Image").gameObject.SetActive(true);
+                            popUpInventory.equipGroup.Find("SlotHead/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+                        else //이미 뭔가 장착된게 있다면,
+                        {
+                            exEquipment = int.Parse(popUpInventory.equipGroup.Find("SlotHead/Image").GetComponent<UISprite>().spriteName);
+                            GameInfoManager.instance.playerInventory.dicPlayerInventory[exEquipment].itemCnt++;
+                            Player.instance.SetTakeOffEquipment(GameInfoManager.instance.dicItemInfo[exEquipment]);
+                            popUpInventory.equipGroup.Find("SlotHead/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+
+                        GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
+                        Player.instance.SetPutOnEquipment(GameInfoManager.instance.dicItemInfo[itemID]);
+                    }
+                    else if (itemClass == 4)
+                    {
+                        //상의
+                        Debug.Log("SlotUp");
+                        int exEquipment = 0;
+
+                        if (!popUpInventory.equipGroup.Find("SlotUp/Image").gameObject.activeSelf)  //장착되게 없다면.
+                        {
+                            popUpInventory.equipGroup.Find("SlotUp/Image").gameObject.SetActive(true);
+                            popUpInventory.equipGroup.Find("SlotUp/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+                        else //이미 뭔가 장착된게 있다면,
+                        {
+                            exEquipment = int.Parse(popUpInventory.equipGroup.Find("SlotUp/Image").GetComponent<UISprite>().spriteName);
+                            GameInfoManager.instance.playerInventory.dicPlayerInventory[exEquipment].itemCnt++;
+                            Player.instance.SetTakeOffEquipment(GameInfoManager.instance.dicItemInfo[exEquipment]);
+                            popUpInventory.equipGroup.Find("SlotUp/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+
+                        GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
+                        Player.instance.SetPutOnEquipment(GameInfoManager.instance.dicItemInfo[itemID]);
+                    }
+                    else if (itemClass == 5)
+                    {
+                        //하의
+                        Debug.Log("SlotDown");
+                        int exEquipment = 0;
+
+                        if (!popUpInventory.equipGroup.Find("SlotDown/Image").gameObject.activeSelf)  //장착되게 없다면.
+                        {
+                            popUpInventory.equipGroup.Find("SlotDown/Image").gameObject.SetActive(true);
+                            popUpInventory.equipGroup.Find("SlotDown/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+                        else //이미 뭔가 장착된게 있다면,
+                        {
+                            exEquipment = int.Parse(popUpInventory.equipGroup.Find("SlotDown/Image").GetComponent<UISprite>().spriteName);
+                            GameInfoManager.instance.playerInventory.dicPlayerInventory[exEquipment].itemCnt++;
+                            Player.instance.SetTakeOffEquipment(GameInfoManager.instance.dicItemInfo[exEquipment]);
+                            popUpInventory.equipGroup.Find("SlotDown/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+
+                        GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
+                        Player.instance.SetPutOnEquipment(GameInfoManager.instance.dicItemInfo[itemID]);
+                    }
+                    else if (itemClass == 6)
+                    {
+                        //신발
+                        Debug.Log("SlotShoes");
+                        int exEquipment = 0;
+
+                        if (!popUpInventory.equipGroup.Find("SlotShoes/Image").gameObject.activeSelf)  //장착되게 없다면.
+                        {
+                            popUpInventory.equipGroup.Find("SlotShoes/Image").gameObject.SetActive(true);
+                            popUpInventory.equipGroup.Find("SlotShoes/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+                        else //이미 뭔가 장착된게 있다면,
+                        {
+                            exEquipment = int.Parse(popUpInventory.equipGroup.Find("SlotShoes/Image").GetComponent<UISprite>().spriteName);
+                            GameInfoManager.instance.playerInventory.dicPlayerInventory[exEquipment].itemCnt++;
+                            Player.instance.SetTakeOffEquipment(GameInfoManager.instance.dicItemInfo[exEquipment]);
+                            popUpInventory.equipGroup.Find("SlotShoes/Image").GetComponent<UISprite>().spriteName = itemID.ToString();
+                        }
+
+                        GameInfoManager.instance.playerInventory.dicPlayerInventory[itemID].itemCnt--;
+                        Player.instance.SetPutOnEquipment(GameInfoManager.instance.dicItemInfo[itemID]);
+                    }
+                    else if (itemClass == 7)
+                    {
+                        //설치물
+                        Debug.Log("installation");
+
+                    }
+                    else if (itemClass == 8)
+                    {
+                        //채집도구
+                        Debug.Log("tools");
+
+                    }
                 }
 
                 popUpInventory.SetPopUpInit();
@@ -89,7 +220,7 @@ public class InventoryItemSlot : MonoBehaviour
 
     void IsResultItemDrop()
     {
-        if(isItemDrop)
+        if (isItemDrop)
         {
             //템 떨구기. 일단 하나 깎고.
             if (GameInfoManager.instance.playerInventory.dicPlayerInventory.ContainsKey(itemID))
@@ -148,7 +279,7 @@ public class InventoryItemSlot : MonoBehaviour
 
     public void UpdateItemInfo()
     {
-        if(itemImage == null)
+        if (itemImage == null)
         {
             itemImage = this.transform.Find("Image").GetComponent<UISprite>();
         }
@@ -181,7 +312,7 @@ public class InventoryItemSlot : MonoBehaviour
 
     void Update()
     {
-        if(isItemDrop)
+        if (isItemDrop)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
